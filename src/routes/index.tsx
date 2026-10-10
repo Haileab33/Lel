@@ -153,6 +153,9 @@ function Index() {
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:mt-10">
             <a
               href="#gallery"
+              onClick={() => {
+                window.dispatchEvent(new CustomEvent("start-bg-music"));
+              }}
               className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3.5 text-sm font-semibold text-white shadow-soft transition active:scale-95 hover:scale-105"
             >
               {content.hero.cta} 💖

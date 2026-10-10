@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { content } from "@/lib/content";
-import { Play, Pause, Volume2, VolumeX, Music, ChevronRight, Heart, X, Sparkles, RefreshCw } from "lucide-react";
+import { Play, Pause, Volume2, VolumeX, Music, ChevronRight, ChevronLeft, Heart, X, Sparkles, RefreshCw } from "lucide-react";
 
 export function Section({
   id,
@@ -80,6 +80,7 @@ export function Gate({ onOpen }: { onOpen: () => void }) {
     e.preventDefault();
     if (pass.trim().toLowerCase() === content.privacy.password.toLowerCase()) {
       sessionStorage.setItem("unlocked", "1");
+      window.dispatchEvent(new CustomEvent("start-bg-music"));
       onOpen();
     } else {
       setErr(true);
@@ -163,6 +164,9 @@ export function Gallery() {
   const [activeChapter, setActiveChapter] = useState("All");
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+
   const photos = content.gallery.photos;
   const chapters = ["All", ...Array.from(new Set(photos.map((p) => p.chapter)))];
 
@@ -183,6 +187,32 @@ export function Gallery() {
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, [openIndex, photos.length]);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || touchStartY.current === null) return;
+    const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+    const deltaY = e.changedTouches[0].clientY - touchStartY.current;
+
+    // Horizontal swipe threshold: 40px
+    if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) {
+      if (deltaX < 0) {
+        setOpenIndex((prev) => (prev !== null ? (prev + 1) % photos.length : null));
+      } else {
+        setOpenIndex((prev) => (prev !== null ? (prev - 1 + photos.length) % photos.length : null));
+      }
+    } else if (deltaY > 80 && Math.abs(deltaY) > Math.abs(deltaX)) {
+      // Swipe down to close
+      setOpenIndex(null);
+    }
+
+    touchStartX.current = null;
+    touchStartY.current = null;
+  };
 
   return (
     <>
@@ -217,7 +247,13 @@ export function Gallery() {
               className={`tone-${p.tone} group relative block w-full overflow-hidden rounded-3xl border p-2 text-left shadow-soft transition active:scale-[0.99] sm:hover:-translate-y-1`}
             >
               <div className="relative overflow-hidden rounded-2xl aspect-[4/3] sm:aspect-[3/4]">
-                <img src={p.src} alt={p.alt} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 sm:group-hover:scale-105" />
+                <img
+                  src={p.src}
+                  alt={p.alt}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-full w-full object-cover transition-transform duration-700 sm:group-hover:scale-105"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-90 sm:opacity-0 sm:transition-opacity sm:duration-300 sm:group-hover:opacity-100" />
                 <span className="absolute bottom-2.5 left-3 right-3 text-xs italic text-white leading-tight">
                   {p.caption}
@@ -232,36 +268,80 @@ export function Gallery() {
         })}
       </div>
 
-      {openIndex !== null && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-3 sm:p-6 backdrop-blur-md animate-in fade-in" onClick={() => setOpenIndex(null)}>
-          <figure className="relative max-h-[90vh] w-full max-w-3xl rounded-3xl bg-card p-4 shadow-2xl overflow-y-auto sm:p-6" onClick={(e) => e.stopPropagation()}>
+      {/* Fullscreen Touch-Swipeable Lightbox Modal */}
+      {openIndex !== null && photos[openIndex] && (
+        <div
+          className="fixed inset-0 z-50 flex flex-col justify-between bg-black/95 p-3 sm:p-6 backdrop-blur-2xl animate-in fade-in select-none"
+          onClick={() => setOpenIndex(null)}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          {/* Lightbox Header */}
+          <div className="flex items-center justify-between pt-1 sm:pt-2 px-2" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center gap-2">
+              <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white/90 uppercase tracking-widest backdrop-blur-md">
+                {photos[openIndex]!.chapter}
+              </span>
+              <span className="text-xs font-medium text-white/60">
+                {openIndex + 1} / {photos.length}
+              </span>
+            </div>
             <button
               onClick={() => setOpenIndex(null)}
-              className="absolute top-3 right-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-muted text-muted-foreground hover:bg-primary hover:text-white"
+              aria-label="Close photo viewer"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-md transition hover:bg-white/20 active:scale-95"
             >
-              <X className="h-4 w-4" />
+              <X className="h-5 w-5" />
             </button>
-            <div className="max-h-[55vh] sm:max-h-[65vh] overflow-hidden rounded-2xl bg-black">
-              <img src={photos[openIndex]!.src} alt={photos[openIndex]!.alt} className="max-h-[55vh] sm:max-h-[65vh] w-full object-contain" />
+          </div>
+
+          {/* Center Stage: Photo & Navigation Arrows */}
+          <div className="relative my-auto flex items-center justify-center py-2 px-1" onClick={(e) => e.stopPropagation()}>
+            {/* Prev Arrow */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setOpenIndex((openIndex - 1 + photos.length) % photos.length);
+              }}
+              aria-label="Previous photo"
+              className="absolute left-1 sm:left-4 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-md transition hover:bg-black/70 active:scale-95 border border-white/10"
+            >
+              <ChevronLeft className="h-6 w-6" />
+            </button>
+
+            {/* Photo */}
+            <div className="flex max-h-[72vh] sm:max-h-[78vh] w-full items-center justify-center overflow-hidden">
+              <img
+                src={photos[openIndex]!.src}
+                alt={photos[openIndex]!.alt}
+                loading="eager"
+                decoding="async"
+                className="max-h-[72vh] sm:max-h-[78vh] w-auto max-w-full rounded-2xl object-contain drop-shadow-2xl transition-all duration-300"
+              />
             </div>
-            <figcaption className="mt-3 text-center font-display text-lg italic text-foreground sm:mt-4 sm:text-2xl">
+
+            {/* Next Arrow */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setOpenIndex((openIndex + 1) % photos.length);
+              }}
+              aria-label="Next photo"
+              className="absolute right-1 sm:right-4 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-md transition hover:bg-black/70 active:scale-95 border border-white/10"
+            >
+              <ChevronRight className="h-6 w-6" />
+            </button>
+          </div>
+
+          {/* Lightbox Footer & Caption */}
+          <div className="pb-3 text-center px-4" onClick={(e) => e.stopPropagation()}>
+            <p className="mx-auto max-w-2xl font-display text-base italic text-white sm:text-2xl leading-relaxed">
               "{photos[openIndex]!.caption}"
-            </figcaption>
-            <div className="mt-1 text-center text-[10px] text-muted-foreground uppercase tracking-widest sm:text-xs">
-              {photos[openIndex]!.chapter} • {openIndex + 1} of {photos.length}
-            </div>
-            <div className="mt-4 flex justify-center gap-2 sm:gap-3">
-              <button className="rounded-full bg-muted px-4 py-2 text-xs font-medium hover:bg-primary hover:text-white active:scale-95" onClick={() => setOpenIndex((openIndex - 1 + photos.length) % photos.length)}>
-                ‹ Prev
-              </button>
-              <button className="rounded-full bg-primary px-5 py-2 text-xs font-semibold text-white shadow-sm hover:opacity-90 active:scale-95" onClick={() => setOpenIndex(null)}>
-                Close
-              </button>
-              <button className="rounded-full bg-muted px-4 py-2 text-xs font-medium hover:bg-primary hover:text-white active:scale-95" onClick={() => setOpenIndex((openIndex + 1) % photos.length)}>
-                Next ›
-              </button>
-            </div>
-          </figure>
+            </p>
+            <p className="mt-2 text-[10px] uppercase tracking-widest text-white/40 sm:hidden">
+              Swipe left / right to browse • Swipe down to close
+            </p>
+          </div>
         </div>
       )}
     </>
@@ -300,6 +380,8 @@ export function Timeline() {
                     <img
                       src={m.artifact}
                       alt={m.title}
+                      loading="lazy"
+                      decoding="async"
                       className={`h-full w-full object-cover ${m.objectPosition || "object-top"}`}
                     />
                   </div>
@@ -510,7 +592,7 @@ export function Scrapbook() {
           >
             {p.img && (
               <div className="mb-3 overflow-hidden rounded-xl border border-black/10 aspect-[4/3]">
-                <img src={p.img} alt={p.title} className="h-full w-full object-cover" />
+                <img src={p.img} alt={p.title} loading="lazy" decoding="async" className="h-full w-full object-cover" />
               </div>
             )}
             <span className="text-[9px] font-semibold uppercase tracking-widest text-muted-foreground sm:text-[10px]">{p.kicker}</span>
@@ -530,8 +612,137 @@ export function Scrapbook() {
   );
 }
 
+function ScratchCard({ onRevealed }: { onRevealed: () => void }) {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [isRevealed, setIsRevealed] = useState(false);
+  const isDrawing = useRef(false);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const width = canvas.parentElement?.clientWidth || 280;
+    const height = canvas.parentElement?.clientHeight || 200;
+    canvas.width = width;
+    canvas.height = height;
+
+    // Metallic gold foil gradient
+    const grad = ctx.createLinearGradient(0, 0, width, height);
+    grad.addColorStop(0, "#d4af37");
+    grad.addColorStop(0.25, "#fceda2");
+    grad.addColorStop(0.5, "#d4af37");
+    grad.addColorStop(0.75, "#fff2b2");
+    grad.addColorStop(1, "#b38c22");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, width, height);
+
+    // Decorative dots
+    ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+    for (let x = 12; x < width; x += 24) {
+      for (let y = 12; y < height; y += 24) {
+        ctx.beginPath();
+        ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Foil text label
+    ctx.fillStyle = "#5c4308";
+    ctx.font = "bold 13px system-ui, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("🪙 Scratch to reveal 🪙", width / 2, height / 2 - 8);
+
+    ctx.font = "10px system-ui, sans-serif";
+    ctx.fillStyle = "#7a5a0b";
+    ctx.fillText("Rub or tap here", width / 2, height / 2 + 12);
+  }, []);
+
+  const scratch = (clientX: number, clientY: number) => {
+    const canvas = canvasRef.current;
+    if (!canvas || isRevealed) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.beginPath();
+    ctx.arc(x, y, 20, 0, Math.PI * 2);
+    ctx.fill();
+
+    try {
+      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const pixels = imgData.data;
+      let clearCount = 0;
+      for (let i = 3; i < pixels.length; i += 32) {
+        if (pixels[i] === 0) clearCount++;
+      }
+      const totalSampled = pixels.length / 32;
+      if (clearCount / totalSampled > 0.22) {
+        setIsRevealed(true);
+        onRevealed();
+      }
+    } catch {
+      // Ignore security errors if any
+    }
+  };
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    e.stopPropagation();
+    isDrawing.current = true;
+    scratch(e.clientX, e.clientY);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    e.stopPropagation();
+    if (!isDrawing.current) return;
+    scratch(e.clientX, e.clientY);
+  };
+
+  const handlePointerUp = (e: React.PointerEvent) => {
+    e.stopPropagation();
+    isDrawing.current = false;
+  };
+
+  const handleRevealClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsRevealed(true);
+    onRevealed();
+  };
+
+  if (isRevealed) return null;
+
+  return (
+    <div
+      onClick={(e) => e.stopPropagation()}
+      className="absolute inset-1.5 z-20 overflow-hidden rounded-2xl shadow-md touch-none select-none animate-in fade-in"
+    >
+      <canvas
+        ref={canvasRef}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerLeave={handlePointerUp}
+        className="h-full w-full cursor-pointer touch-none"
+      />
+      <button
+        onClick={handleRevealClick}
+        className="absolute bottom-2 right-2 rounded-full bg-black/40 px-2.5 py-1 text-[9px] font-semibold text-white backdrop-blur-sm transition hover:bg-black/60 active:scale-95"
+      >
+        Reveal ✨
+      </button>
+    </div>
+  );
+}
+
 export function GiftBoxes() {
   const [opened, setOpened] = useState<Set<number>>(new Set());
+  const [scratched, setScratched] = useState<Set<number>>(new Set());
 
   const toggleOpen = (index: number) => {
     const updated = new Set(opened);
@@ -543,11 +754,16 @@ export function GiftBoxes() {
     setOpened(updated);
   };
 
+  const handleRevealed = (index: number) => {
+    setScratched((prev) => new Set(prev).add(index));
+  };
+
   return (
     <div className="space-y-6 sm:space-y-10">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 sm:gap-6">
         {content.gifts.items.map((gift, i) => {
           const isOpen = opened.has(i);
+          const isScratched = scratched.has(i);
           return (
             <div
               key={i}
@@ -569,15 +785,26 @@ export function GiftBoxes() {
                   </span>
                 </div>
 
-                {/* Back / Unwrapped Voucher */}
-                <div className="glass absolute inset-0 flex flex-col items-center justify-center rounded-3xl p-5 text-center border-2 border-primary/40 shadow-soft [backface-visibility:hidden] [transform:rotateY(180deg)]">
+                {/* Back / Unwrapped Voucher with Scratch-to-Reveal */}
+                <div className="glass absolute inset-0 flex flex-col items-center justify-center rounded-3xl p-5 text-center border-2 border-primary/40 shadow-soft [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-hidden">
+                  {isOpen && !isScratched && (
+                    <ScratchCard onRevealed={() => handleRevealed(i)} />
+                  )}
+
                   <span className="text-[10px] font-semibold uppercase tracking-widest text-primary">{gift.code}</span>
                   <h4 className="mt-1 font-display text-xl font-bold text-foreground sm:text-2xl">{gift.title}</h4>
                   <span className="text-[11px] font-medium text-muted-foreground sm:text-xs">{gift.sub}</span>
                   <p className="mt-1 text-xs italic text-muted-foreground leading-relaxed">{gift.body}</p>
-                  <span className="mt-2 text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-3 py-0.5 rounded-full border border-emerald-200">
-                    Voucher Claimed ✨
-                  </span>
+                  
+                  {isScratched ? (
+                    <span className="mt-2 text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-3 py-0.5 rounded-full border border-emerald-200 animate-fade-rise">
+                      Voucher Claimed ✨
+                    </span>
+                  ) : (
+                    <span className="mt-2 text-[10px] font-semibold text-accent/80 bg-accent/10 px-3 py-0.5 rounded-full border border-accent/20">
+                      Scratch to claim 🪙
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -715,6 +942,9 @@ export function MusicPlayer() {
         });
     };
 
+    // Listen for external trigger to start background music
+    window.addEventListener("start-bg-music", startPlayback);
+
     // Try immediate autoplay on page load
     startPlayback();
 
@@ -725,6 +955,7 @@ export function MusicPlayer() {
     window.addEventListener("scroll", startPlayback, { once: true });
 
     return () => {
+      window.removeEventListener("start-bg-music", startPlayback);
       window.removeEventListener("pointerdown", startPlayback);
       window.removeEventListener("click", startPlayback);
       window.removeEventListener("keydown", startPlayback);
@@ -761,8 +992,18 @@ export function MusicPlayer() {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-4 right-4 z-50 flex items-center gap-2">
       <audio ref={audioRef} src={track?.src} onEnded={handleEnded} />
+
+      {!isPlaying && !isExpanded && (
+        <button
+          onClick={togglePlay}
+          aria-label="Start background music"
+          className="flex items-center gap-1.5 rounded-full bg-primary/95 text-white px-3.5 py-2 text-xs font-semibold shadow-xl backdrop-blur-md animate-bounce border border-white/20 transition active:scale-95 hover:bg-primary"
+        >
+          <span>🎵 Tap to start music</span>
+        </button>
+      )}
 
       {!isExpanded ? (
         <button
