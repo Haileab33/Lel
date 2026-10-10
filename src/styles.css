@@ -1,0 +1,208 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-blush: var(--blush);
+  --color-lavender: var(--lavender);
+  --color-cream: var(--cream);
+  --color-sage: var(--sage);
+  --color-rose: var(--rose);
+  --color-gold: var(--gold);
+  --font-display: "Cormorant Garamond", "Playfair Display", serif;
+  --font-script: "Great Vibes", cursive;
+  --font-sans: "Inter", "Jost", sans-serif;
+}
+
+:root {
+  --radius: 1rem;
+  --background: #FFF9F6;
+  --foreground: #2A2421;
+  --card: #FFFFFF;
+  --card-foreground: #2A2421;
+  --popover: #FFFFFF;
+  --popover-foreground: #2A2421;
+  --primary: #D9777F;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F3E8EE;
+  --secondary-foreground: #5C3A4E;
+  --muted: #F5EFEB;
+  --muted-foreground: #786C65;
+  --accent: #D4AF37;
+  --accent-foreground: #FFFFFF;
+  --destructive: #E54D42;
+  --destructive-foreground: #FFFFFF;
+  --border: #F0E6E0;
+  --input: #F0E6E0;
+  --ring: #D9777F;
+
+  /* Pastel Tones from gift-site */
+  --blush: #FDE8E8;
+  --lavender: #EBE5F5;
+  --cream: #FAF4ED;
+  --sage: #E3EBE4;
+  --rose: #FADCE3;
+  --gold: #FBF0D9;
+
+  --gradient-romance: linear-gradient(135deg, #FFF0F2 0%, #F4E8F8 50%, #FAF0E6 100%);
+  --gradient-gold: linear-gradient(120deg, #D4AF37, #F3E5AB, #C59B27);
+  --shadow-soft: 0 16px 40px -12px rgba(217, 119, 127, 0.2);
+  --shadow-polaroid: 0 12px 30px -10px rgba(0, 0, 0, 0.12), 0 4px 10px -2px rgba(0, 0, 0, 0.05);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+  }
+}
+
+/* Custom UI Utilities */
+@utility bg-romance { background: var(--gradient-romance); }
+@utility text-gold-shine {
+  background: var(--gradient-gold);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+@utility bg-gold { background: var(--gradient-gold); }
+@utility shadow-soft { box-shadow: var(--shadow-soft); }
+@utility shadow-polaroid { box-shadow: var(--shadow-polaroid); }
+@utility glass {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+}
+@utility glass-dark {
+  background: rgba(42, 36, 33, 0.88);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Hide Scrollbar for touch carousels */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Tone Classes */
+.tone-blush { background-color: var(--blush); border-color: #F8C8C8; }
+.tone-lavender { background-color: var(--lavender); border-color: #D8CDED; }
+.tone-cream { background-color: var(--cream); border-color: #EDE2D3; }
+.tone-sage { background-color: var(--sage); border-color: #C8DAC9; }
+.tone-rose { background-color: var(--rose); border-color: #F5B8C6; }
+.tone-gold { background-color: var(--gold); border-color: #F3DEB0; }
+
+/* Keyframe Animations */
+@keyframes float-petal {
+  0% { transform: translateY(-5vh) rotate(0deg) translateX(0); opacity: 0; }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.8; }
+  100% { transform: translateY(105vh) rotate(360deg) translateX(50px); opacity: 0; }
+}
+.animate-petal {
+  animation: float-petal 12s linear infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.08); }
+}
+.animate-pulse-glow {
+  animation: pulse-glow 6s ease-in-out infinite;
+}
+
+@keyframes fade-rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-rise {
+  animation: fade-rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Polaroid Card Fasteners */
+.fastener-tape::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 70px;
+  height: 20px;
+  background: rgba(245, 235, 220, 0.75);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(2px);
+  border: 1px dashed rgba(200, 180, 160, 0.4);
+  z-index: 10;
+}
+
+.fastener-clip::before {
+  content: "📎";
+  position: absolute;
+  top: -14px;
+  left: 16px;
+  font-size: 20px;
+  z-index: 10;
+}
+
+.fastener-pin::before {
+  content: "📌";
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 18px;
+  z-index: 10;
+}
+
+.fastener-corner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-top: 20px solid var(--primary);
+  border-right: 20px solid transparent;
+  z-index: 10;
+}
