@@ -15,10 +15,10 @@ export const content = {
 
   privacy: {
     enabled: true,
-    password: "forever",
+    password: "Daddy",
     title: "For one pair of eyes only",
     sub: "Someone made this for you. It took a while. Take your time.",
-    hint: "Hint: the word I say when I'm sure about us.",
+    hint: "Hint: what you call me",
     wrongMsg: "Not quite — try again, my love.",
   },
 
