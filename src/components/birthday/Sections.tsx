@@ -697,7 +697,15 @@ export function GiftBoxes() {
                 }`}
               >
                 {/* Front of Gift Box (Wrapped) */}
-                <div className={`tone-${gift.ribbon} absolute inset-0 flex flex-col items-center justify-center rounded-3xl border p-5 text-center shadow-soft [backface-visibility:hidden]`}>
+                <div
+                  className={`tone-${gift.ribbon} absolute inset-0 flex flex-col items-center justify-center rounded-3xl border p-5 text-center shadow-soft transition-all duration-300 ${
+                    isOpen ? "opacity-0 pointer-events-none invisible" : "opacity-100 z-10"
+                  }`}
+                  style={{
+                    backfaceVisibility: "hidden",
+                    WebkitBackfaceVisibility: "hidden",
+                  }}
+                >
                   <span className="text-4xl transition sm:group-hover:scale-110 sm:text-5xl">🎁</span>
                   <h4 className="mt-2 font-display text-lg font-bold text-foreground sm:text-xl">Surprise #{i + 1}</h4>
                   <span className="mt-0.5 text-[11px] text-muted-foreground sm:text-xs">Mystery Gift</span>
@@ -707,7 +715,17 @@ export function GiftBoxes() {
                 </div>
 
                 {/* Back / Unwrapped Voucher with Scratch-to-Reveal */}
-                <div className="glass absolute inset-0 flex flex-col items-center justify-center rounded-3xl p-5 text-center border-2 border-primary/40 shadow-soft [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-hidden">
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  className={`glass absolute inset-0 flex flex-col items-center justify-center rounded-3xl p-5 text-center border-2 border-primary/40 shadow-soft overflow-hidden transition-all duration-300 ${
+                    isOpen ? "opacity-100 z-10" : "opacity-0 pointer-events-none invisible"
+                  }`}
+                  style={{
+                    transform: "rotateY(180deg)",
+                    backfaceVisibility: "hidden",
+                    WebkitBackfaceVisibility: "hidden",
+                  }}
+                >
                   {isOpen && !isScratched && (
                     <ScratchCard onRevealed={() => handleRevealed(i)} />
                   )}
@@ -726,6 +744,16 @@ export function GiftBoxes() {
                       Scratch to claim 🪙
                     </span>
                   )}
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleOpen(i);
+                    }}
+                    className="mt-2 text-[10px] text-muted-foreground hover:text-primary transition underline underline-offset-2"
+                  >
+                    Wrap box again ↩
+                  </button>
                 </div>
               </div>
             </div>
