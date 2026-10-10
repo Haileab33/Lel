@@ -164,9 +164,6 @@ export function Gallery() {
   const [activeChapter, setActiveChapter] = useState("All");
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-  const touchStartX = useRef<number | null>(null);
-  const touchStartY = useRef<number | null>(null);
-
   const photos = content.gallery.photos;
   const chapters = ["All", ...Array.from(new Set(photos.map((p) => p.chapter)))];
 
@@ -187,32 +184,6 @@ export function Gallery() {
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, [openIndex, photos.length]);
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-    touchStartY.current = e.touches[0].clientY;
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null || touchStartY.current === null) return;
-    const deltaX = e.changedTouches[0].clientX - touchStartX.current;
-    const deltaY = e.changedTouches[0].clientY - touchStartY.current;
-
-    // Horizontal swipe threshold: 40px
-    if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) {
-      if (deltaX < 0) {
-        setOpenIndex((prev) => (prev !== null ? (prev + 1) % photos.length : null));
-      } else {
-        setOpenIndex((prev) => (prev !== null ? (prev - 1 + photos.length) % photos.length : null));
-      }
-    } else if (deltaY > 80 && Math.abs(deltaY) > Math.abs(deltaX)) {
-      // Swipe down to close
-      setOpenIndex(null);
-    }
-
-    touchStartX.current = null;
-    touchStartY.current = null;
-  };
 
   return (
     <>
@@ -247,13 +218,7 @@ export function Gallery() {
               className={`tone-${p.tone} group relative block w-full overflow-hidden rounded-3xl border p-2 text-left shadow-soft transition active:scale-[0.99] sm:hover:-translate-y-1`}
             >
               <div className="relative overflow-hidden rounded-2xl aspect-[4/3] sm:aspect-[3/4]">
-                <img
-                  src={p.src}
-                  alt={p.alt}
-                  loading="lazy"
-                  decoding="async"
-                  className="h-full w-full object-cover transition-transform duration-700 sm:group-hover:scale-105"
-                />
+                <img src={p.src} alt={p.alt} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-700 sm:group-hover:scale-105" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-90 sm:opacity-0 sm:transition-opacity sm:duration-300 sm:group-hover:opacity-100" />
                 <span className="absolute bottom-2.5 left-3 right-3 text-xs italic text-white leading-tight">
                   {p.caption}
@@ -268,80 +233,36 @@ export function Gallery() {
         })}
       </div>
 
-      {/* Fullscreen Touch-Swipeable Lightbox Modal */}
-      {openIndex !== null && photos[openIndex] && (
-        <div
-          className="fixed inset-0 z-50 flex flex-col justify-between bg-black/95 p-3 sm:p-6 backdrop-blur-2xl animate-in fade-in select-none"
-          onClick={() => setOpenIndex(null)}
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-        >
-          {/* Lightbox Header */}
-          <div className="flex items-center justify-between pt-1 sm:pt-2 px-2" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center gap-2">
-              <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white/90 uppercase tracking-widest backdrop-blur-md">
-                {photos[openIndex]!.chapter}
-              </span>
-              <span className="text-xs font-medium text-white/60">
-                {openIndex + 1} / {photos.length}
-              </span>
-            </div>
+      {openIndex !== null && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-3 sm:p-6 backdrop-blur-md animate-in fade-in" onClick={() => setOpenIndex(null)}>
+          <figure className="relative max-h-[90vh] w-full max-w-3xl rounded-3xl bg-card p-4 shadow-2xl overflow-y-auto sm:p-6" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={() => setOpenIndex(null)}
-              aria-label="Close photo viewer"
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-md transition hover:bg-white/20 active:scale-95"
+              className="absolute top-3 right-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-muted text-muted-foreground hover:bg-primary hover:text-white"
             >
-              <X className="h-5 w-5" />
+              <X className="h-4 w-4" />
             </button>
-          </div>
-
-          {/* Center Stage: Photo & Navigation Arrows */}
-          <div className="relative my-auto flex items-center justify-center py-2 px-1" onClick={(e) => e.stopPropagation()}>
-            {/* Prev Arrow */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setOpenIndex((openIndex - 1 + photos.length) % photos.length);
-              }}
-              aria-label="Previous photo"
-              className="absolute left-1 sm:left-4 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-md transition hover:bg-black/70 active:scale-95 border border-white/10"
-            >
-              <ChevronLeft className="h-6 w-6" />
-            </button>
-
-            {/* Photo */}
-            <div className="flex max-h-[72vh] sm:max-h-[78vh] w-full items-center justify-center overflow-hidden">
-              <img
-                src={photos[openIndex]!.src}
-                alt={photos[openIndex]!.alt}
-                loading="eager"
-                decoding="async"
-                className="max-h-[72vh] sm:max-h-[78vh] w-auto max-w-full rounded-2xl object-contain drop-shadow-2xl transition-all duration-300"
-              />
+            <div className="max-h-[55vh] sm:max-h-[65vh] overflow-hidden rounded-2xl bg-black">
+              <img src={photos[openIndex]!.src} alt={photos[openIndex]!.alt} className="max-h-[55vh] sm:max-h-[65vh] w-full object-contain" />
             </div>
-
-            {/* Next Arrow */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setOpenIndex((openIndex + 1) % photos.length);
-              }}
-              aria-label="Next photo"
-              className="absolute right-1 sm:right-4 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-md transition hover:bg-black/70 active:scale-95 border border-white/10"
-            >
-              <ChevronRight className="h-6 w-6" />
-            </button>
-          </div>
-
-          {/* Lightbox Footer & Caption */}
-          <div className="pb-3 text-center px-4" onClick={(e) => e.stopPropagation()}>
-            <p className="mx-auto max-w-2xl font-display text-base italic text-white sm:text-2xl leading-relaxed">
+            <figcaption className="mt-3 text-center font-display text-lg italic text-foreground sm:mt-4 sm:text-2xl">
               "{photos[openIndex]!.caption}"
-            </p>
-            <p className="mt-2 text-[10px] uppercase tracking-widest text-white/40 sm:hidden">
-              Swipe left / right to browse • Swipe down to close
-            </p>
-          </div>
+            </figcaption>
+            <div className="mt-1 text-center text-[10px] text-muted-foreground uppercase tracking-widest sm:text-xs">
+              {photos[openIndex]!.chapter} • {openIndex + 1} of {photos.length}
+            </div>
+            <div className="mt-4 flex justify-center gap-2 sm:gap-3">
+              <button className="rounded-full bg-muted px-4 py-2 text-xs font-medium hover:bg-primary hover:text-white active:scale-95" onClick={() => setOpenIndex((openIndex - 1 + photos.length) % photos.length)}>
+                ‹ Prev
+              </button>
+              <button className="rounded-full bg-primary px-5 py-2 text-xs font-semibold text-white shadow-sm hover:opacity-90 active:scale-95" onClick={() => setOpenIndex(null)}>
+                Close
+              </button>
+              <button className="rounded-full bg-muted px-4 py-2 text-xs font-medium hover:bg-primary hover:text-white active:scale-95" onClick={() => setOpenIndex((openIndex + 1) % photos.length)}>
+                Next ›
+              </button>
+            </div>
+          </figure>
         </div>
       )}
     </>
