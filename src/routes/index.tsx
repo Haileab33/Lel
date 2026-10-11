@@ -6,7 +6,6 @@ import {
   CountdownSection,
   Gallery,
   Gate,
-  GiftBoxes,
   Media,
   MusicPlayer,
   Petals,
@@ -36,9 +35,8 @@ const navLinks = [
   ["journey", "Our Story", "02"],
   ["media", "Listen", "03"],
   ["scrapbook", "Scrapbook", "04"],
-  ["gifts", "Gifts", "05"],
-  ["countdown", "Milestones", "06"],
-  ["quotes", "For You", "07"],
+  ["countdown", "Milestones", "05"],
+  ["quotes", "For You", "06"],
 ] as const;
 
 function Index() {
@@ -187,19 +185,15 @@ function Index() {
           </Section>
         </div>
 
-        <Section id="gifts" eyebrow={content.gifts.eyebrow} title={content.gifts.title} lede={content.gifts.lede}>
-          <GiftBoxes />
+        <Section id="countdown" eyebrow={content.countdown.eyebrow} title={content.countdown.title} lede={content.countdown.lede}>
+          <CountdownSection />
         </Section>
 
         <div className="bg-muted/40">
-          <Section id="countdown" eyebrow={content.countdown.eyebrow} title={content.countdown.title} lede={content.countdown.lede}>
-            <CountdownSection />
+          <Section id="quotes" eyebrow={content.quotes.eyebrow} title={content.quotes.title} lede={content.quotes.lede}>
+            <QuotesAndLetter />
           </Section>
         </div>
-
-        <Section id="quotes" eyebrow={content.quotes.eyebrow} title={content.quotes.title} lede={content.quotes.lede}>
-          <QuotesAndLetter />
-        </Section>
       </main>
 
       {/* Footer */}
