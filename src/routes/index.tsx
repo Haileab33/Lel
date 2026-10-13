@@ -15,6 +15,7 @@ import {
   Section,
   Timeline,
 } from "@/components/birthday/Sections";
+import { TeddyBear } from "@/components/birthday/TeddyBear";
 import { Heart, Menu, X, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -209,6 +210,9 @@ function Index() {
 
       {/* Persistent Audio Mini-Player */}
       <MusicPlayer />
+
+      {/* Interactive Scroll-Walking Teddy Bear Companion */}
+      <TeddyBear />
     </div>
   );
 }
