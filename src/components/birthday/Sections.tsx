@@ -407,21 +407,23 @@ export function Scrapbook() {
   const [img, setImg] = useState<string | undefined>();
 
   useEffect(() => {
-    const saved = localStorage.getItem("scrapbook-combined-v3");
+    const saved = localStorage.getItem("scrapbook-combined-v4");
     if (saved) {
       try {
-        setPages(JSON.parse(saved));
+        const parsed: MemoryItem[] = JSON.parse(saved);
+        setPages(parsed.filter((item) => item.title !== "The keychain"));
         return;
       } catch {
         /* fallback to defaults */
       }
     }
-    setPages(content.scrapbook.pages as MemoryItem[]);
+    setPages((content.scrapbook.pages as MemoryItem[]).filter((item) => item.title !== "The keychain"));
   }, []);
 
   const savePages = (newPages: MemoryItem[]) => {
-    setPages(newPages);
-    localStorage.setItem("scrapbook-combined-v3", JSON.stringify(newPages));
+    const filtered = newPages.filter((item) => item.title !== "The keychain");
+    setPages(filtered);
+    localStorage.setItem("scrapbook-combined-v4", JSON.stringify(filtered));
   };
 
   const handleImage = (file?: File) => {
@@ -561,7 +563,7 @@ export function QuotesAndLetter() {
     <div className="space-y-10 sm:space-y-16">
       {/* Quotes Grid */}
       <div>
-        <h3 className="text-center font-display text-2xl font-bold mb-6 sm:text-3xl sm:mb-8">Things I've Said & Borrowed</h3>
+        <h3 className="text-center font-display text-2xl font-bold mb-6 sm:text-3xl sm:mb-8">Things I've Said & Words of Love</h3>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 sm:gap-6">
           {content.quotes.mine.map((q, i) => (
             <div key={i} className="glass rounded-3xl p-5 shadow-soft border-primary/20 flex flex-col justify-between sm:p-6">
