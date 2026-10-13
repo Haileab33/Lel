@@ -16,6 +16,8 @@ import {
   Timeline,
 } from "@/components/birthday/Sections";
 import { TeddyBear } from "@/components/birthday/TeddyBear";
+import { LoveJar } from "@/components/birthday/LoveJar";
+import { BucketList } from "@/components/birthday/BucketList";
 import { Heart, Menu, X, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -36,8 +38,10 @@ const navLinks = [
   ["journey", "Our Story", "02"],
   ["media", "Listen", "03"],
   ["scrapbook", "Scrapbook", "04"],
-  ["countdown", "Milestones", "05"],
-  ["quotes", "For You", "06"],
+  ["jar", "Love Jar", "05"],
+  ["bucket-list", "Bucket List", "06"],
+  ["countdown", "Milestones", "07"],
+  ["quotes", "For You", "08"],
 ] as const;
 
 function Index() {
@@ -183,6 +187,16 @@ function Index() {
         <div className="bg-muted/40">
           <Section id="scrapbook" eyebrow={content.scrapbook.eyebrow} title={content.scrapbook.title} lede={content.scrapbook.lede}>
             <Scrapbook />
+          </Section>
+        </div>
+
+        <Section id="jar" eyebrow={content.loveJar.eyebrow} title={content.loveJar.title} lede={content.loveJar.lede}>
+          <LoveJar />
+        </Section>
+
+        <div className="bg-muted/40">
+          <Section id="bucket-list" eyebrow={content.bucketList.eyebrow} title={content.bucketList.title} lede={content.bucketList.lede}>
+            <BucketList />
           </Section>
         </div>
 
