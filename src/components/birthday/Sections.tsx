@@ -333,13 +333,22 @@ export function Media() {
       audio.pause();
       setPlayingId(null);
     } else {
+      // Pause any previously playing voice note
       if (playingId && audioRefs.current[playingId]) {
         audioRefs.current[playingId]?.pause();
+        try {
+          audioRefs.current[playingId]!.currentTime = 0;
+        } catch {
+          // ignore
+        }
       }
       // Autopause background music when voice note plays
       window.dispatchEvent(new CustomEvent("pause-bg-music"));
-      audio.play();
       setPlayingId(id);
+      audio.play().catch((err) => {
+        console.error("Playback error:", err);
+        setPlayingId(null);
+      });
     }
   };
 
@@ -362,11 +371,16 @@ export function Media() {
 
           <audio
             ref={(el) => (audioRefs.current[note.id] = el)}
-            src={note.src}
             onEnded={() => setPlayingId(null)}
-            preload="none"
+            onPause={() => {
+              if (playingId === note.id) setPlayingId(null);
+            }}
+            preload="metadata"
             className="hidden"
-          />
+          >
+            <source src={note.src} type="audio/mpeg" />
+            <source src={note.src.replace(".mp3", ".ogg")} type="audio/ogg" />
+          </audio>
 
           <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground border-t border-border/40 pt-2.5">
             <span>Duration: {note.duration}</span>
@@ -614,11 +628,12 @@ export function QuotesAndLetter() {
   );
 }
 
-export function MusicPlayer() {
+export function MusicPlayer({ isUnlocked = true }: { isUnlocked?: boolean }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const hasSeekedRef = useRef(false);
 
   const track = content.bgMusic || content.playlist[0];
 
@@ -640,14 +655,41 @@ export function MusicPlayer() {
     const audio = audioRef.current;
     if (!audio) return;
 
-    const startPlayback = () => {
-      if (audio.currentTime < 15) {
-        audio.currentTime = 15;
+    // Enforce 15s start on mobile & desktop
+    const ensureSeekTo15 = () => {
+      if (!hasSeekedRef.current && audio.currentTime < 14.8) {
+        try {
+          audio.currentTime = 15;
+          hasSeekedRef.current = true;
+        } catch {
+          // ignore
+        }
       }
+    };
+
+    audio.addEventListener("loadedmetadata", ensureSeekTo15);
+    audio.addEventListener("canplay", ensureSeekTo15);
+    audio.addEventListener("playing", ensureSeekTo15);
+
+    const handleTimeUpdate = () => {
+      if (!hasSeekedRef.current && audio.currentTime < 14.8) {
+        try {
+          audio.currentTime = 15;
+          hasSeekedRef.current = true;
+        } catch {
+          // ignore
+        }
+      }
+    };
+    audio.addEventListener("timeupdate", handleTimeUpdate);
+
+    const startPlayback = () => {
+      ensureSeekTo15();
       audio
         .play()
         .then(() => {
           setIsPlaying(true);
+          ensureSeekTo15();
           window.removeEventListener("pointerdown", startPlayback);
           window.removeEventListener("click", startPlayback);
           window.removeEventListener("keydown", startPlayback);
@@ -661,14 +703,14 @@ export function MusicPlayer() {
     // Listen for external trigger to start background music
     window.addEventListener("start-bg-music", startPlayback);
 
-    // Try immediate autoplay on page load
-    startPlayback();
-
-    // Fallback: start on first user interaction if blocked
-    window.addEventListener("pointerdown", startPlayback, { once: true });
-    window.addEventListener("click", startPlayback, { once: true });
-    window.addEventListener("keydown", startPlayback, { once: true });
-    window.addEventListener("scroll", startPlayback, { once: true });
+    // If unlocked, try starting playback
+    if (isUnlocked) {
+      startPlayback();
+      window.addEventListener("pointerdown", startPlayback, { once: true });
+      window.addEventListener("click", startPlayback, { once: true });
+      window.addEventListener("keydown", startPlayback, { once: true });
+      window.addEventListener("scroll", startPlayback, { once: true });
+    }
 
     return () => {
       window.removeEventListener("start-bg-music", startPlayback);
@@ -676,21 +718,37 @@ export function MusicPlayer() {
       window.removeEventListener("click", startPlayback);
       window.removeEventListener("keydown", startPlayback);
       window.removeEventListener("scroll", startPlayback);
+      audio.removeEventListener("loadedmetadata", ensureSeekTo15);
+      audio.removeEventListener("canplay", ensureSeekTo15);
+      audio.removeEventListener("playing", ensureSeekTo15);
+      audio.removeEventListener("timeupdate", handleTimeUpdate);
     };
-  }, []);
+  }, [isUnlocked]);
 
   const togglePlay = () => {
     if (!audioRef.current) return;
+    const audio = audioRef.current;
     if (isPlaying) {
-      audioRef.current.pause();
+      audio.pause();
       setIsPlaying(false);
     } else {
-      if (audioRef.current.currentTime < 15) {
-        audioRef.current.currentTime = 15;
+      if (!hasSeekedRef.current && audio.currentTime < 14.8) {
+        try {
+          audio.currentTime = 15;
+          hasSeekedRef.current = true;
+        } catch {
+          // ignore
+        }
       }
-      audioRef.current
+      audio
         .play()
-        .then(() => setIsPlaying(true))
+        .then(() => {
+          setIsPlaying(true);
+          if (!hasSeekedRef.current && audio.currentTime < 14.8) {
+            audio.currentTime = 15;
+            hasSeekedRef.current = true;
+          }
+        })
         .catch(() => {});
     }
   };
@@ -704,22 +762,32 @@ export function MusicPlayer() {
   const handleEnded = () => {
     if (!audioRef.current) return;
     audioRef.current.currentTime = 15;
+    hasSeekedRef.current = true;
     audioRef.current.play().catch(() => {});
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex items-center gap-2">
-      <audio ref={audioRef} src={track?.src} onEnded={handleEnded} />
+    <>
+      <audio
+        ref={audioRef}
+        src={track?.src}
+        preload="auto"
+        onEnded={handleEnded}
+        onPause={() => setIsPlaying(false)}
+        onPlay={() => setIsPlaying(true)}
+      />
 
-      {!isPlaying && !isExpanded && (
-        <button
-          onClick={togglePlay}
-          aria-label="Start background music"
-          className="flex items-center gap-1.5 rounded-full bg-primary/95 text-white px-3.5 py-2 text-xs font-semibold shadow-xl backdrop-blur-md animate-bounce border border-white/20 transition active:scale-95 hover:bg-primary"
-        >
-          <span>🎵 Tap to start music</span>
-        </button>
-      )}
+      {isUnlocked && (
+        <div className="fixed bottom-4 right-4 z-50 flex items-center gap-2">
+          {!isPlaying && !isExpanded && (
+            <button
+              onClick={togglePlay}
+              aria-label="Start background music"
+              className="flex items-center gap-1.5 rounded-full bg-primary/95 text-white px-3.5 py-2 text-xs font-semibold shadow-xl backdrop-blur-md animate-bounce border border-white/20 transition active:scale-95 hover:bg-primary"
+            >
+              <span>🎵 Tap to start music</span>
+            </button>
+          )}
 
       {!isExpanded ? (
         <button
@@ -771,5 +839,7 @@ export function MusicPlayer() {
         </div>
       )}
     </div>
-  );
+  )}
+</>
+);
 }

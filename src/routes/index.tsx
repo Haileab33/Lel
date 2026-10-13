@@ -64,7 +64,14 @@ function Index() {
     };
   }, [mobileMenuOpen]);
 
-  if (!unlocked) return <Gate onOpen={() => setUnlocked(true)} />;
+  if (!unlocked) {
+    return (
+      <>
+        <Gate onOpen={() => setUnlocked(true)} />
+        <MusicPlayer isUnlocked={false} />
+      </>
+    );
+  }
 
   return (
     <div className="relative min-h-screen bg-background text-foreground selection:bg-primary/20 selection:text-primary">
@@ -223,7 +230,7 @@ function Index() {
       </footer>
 
       {/* Persistent Audio Mini-Player */}
-      <MusicPlayer />
+      <MusicPlayer isUnlocked={true} />
 
       {/* Interactive Scroll-Walking Teddy Bear Companion */}
       <TeddyBear />

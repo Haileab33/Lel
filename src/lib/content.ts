@@ -228,7 +228,7 @@ export const content = {
     voiceNotes: [
       {
         id: "1",
-        src: "/audio/track-1.ogg",
+        src: "/audio/track-1.mp3",
         title: "Wendi Mak Eskenjaje",
         when: "Music",
         duration: "0:57",
@@ -236,7 +236,7 @@ export const content = {
       },
       {
         id: "2",
-        src: "/audio/track-2.ogg",
+        src: "/audio/track-2.mp3",
         title: "Eyob Mekonnen - Ye Ewenetuan",
         when: "Music",
         duration: "00:38",
@@ -244,7 +244,7 @@ export const content = {
       },
       {
         id: "3",
-        src: "/audio/track-3.ogg",
+        src: "/audio/track-3.mp3",
         title: "My Dare",
         when: "Just for fun",
         duration: "0:27",
@@ -252,7 +252,7 @@ export const content = {
       },
       {
         id: "4",
-        src: "/audio/track-4.ogg",
+        src: "/audio/track-4.mp3",
         title: "A Promise",
         when: "Keep this close",
         duration: "0:08",
@@ -260,7 +260,7 @@ export const content = {
       },
       {
         id: "5",
-        src: "/audio/track-5.ogg",
+        src: "/audio/track-5.mp3",
         title: "Teddy Afro - Marakiye",
         when: "Music",
         duration: "0:54",
