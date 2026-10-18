@@ -130,8 +130,62 @@ export function Gate({ onOpen }: { onOpen: () => void }) {
   );
 }
 
+export function TimeTogether() {
+  const [elapsed, setElapsed] = useState<{ years: number; months: number; days: number } | null>(null);
+
+  useEffect(() => {
+    const calculateTime = () => {
+      const start = new Date(2023, 4, 18, 0, 0, 0); // May 18, 2023 (Month index 4 = May)
+      const now = new Date();
+
+      let years = now.getFullYear() - start.getFullYear();
+      let months = now.getMonth() - start.getMonth();
+      let days = now.getDate() - start.getDate();
+
+      if (days < 0) {
+        const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+        days += prevMonth.getDate();
+        months--;
+      }
+
+      if (months < 0) {
+        months += 12;
+        years--;
+      }
+
+      setElapsed({
+        years: Math.max(0, years),
+        months: Math.max(0, months),
+        days: Math.max(0, days),
+      });
+    };
+
+    calculateTime();
+    const t = setInterval(calculateTime, 1000);
+    return () => clearInterval(t);
+  }, []);
+
+  const parts = [
+    ["Years", elapsed?.years],
+    ["Months", elapsed?.months],
+    ["Days", elapsed?.days],
+  ] as const;
+
+  return (
+    <div className="grid grid-cols-3 gap-2 sm:gap-4 max-w-sm sm:max-w-md mx-auto">
+      {parts.map(([l, v]) => (
+        <div key={l} className="glass rounded-2xl px-2 py-2.5 text-center shadow-soft sm:px-5 sm:py-4 transition hover:scale-[1.02]">
+          <div className="font-display text-2xl font-bold text-gold-shine sm:text-4xl">
+            {v === undefined ? "--" : String(v)}
+          </div>
+          <div className="mt-0.5 text-[8px] uppercase tracking-[0.18em] text-muted-foreground sm:text-xs">{l}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function Countdown() {
-  const target = new Date(content.birthday.targetDate).getTime();
   const [now, setNow] = useState<number | null>(null);
 
   useEffect(() => {
@@ -140,6 +194,17 @@ export function Countdown() {
     return () => clearInterval(t);
   }, []);
 
+  // Dynamic calculation for next upcoming May 18 anniversary
+  const getNextAnniversary = () => {
+    const current = new Date();
+    let nextAnniv = new Date(current.getFullYear(), 4, 18, 0, 0, 0);
+    if (current.getTime() >= nextAnniv.getTime()) {
+      nextAnniv = new Date(current.getFullYear() + 1, 4, 18, 0, 0, 0);
+    }
+    return nextAnniv.getTime();
+  };
+
+  const target = getNextAnniversary();
   const diff = Math.max(0, target - (now ?? target));
   const parts = [
     ["Days", Math.floor(diff / 864e5)],

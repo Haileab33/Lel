@@ -14,6 +14,7 @@ import {
   ScrollProgress,
   Section,
   Timeline,
+  TimeTogether,
 } from "@/components/birthday/Sections";
 import { TeddyBear } from "@/components/birthday/TeddyBear";
 import { LoveJar } from "@/components/birthday/LoveJar";
@@ -156,8 +157,20 @@ function Index() {
             "{content.hero.sub}"
           </p>
 
-          <div className="mt-8 sm:mt-10">
-            <Countdown />
+          <div className="mt-8 space-y-6 sm:mt-10 sm:space-y-8">
+            <div className="mx-auto max-w-md">
+              <p className="mb-2 text-center text-[10px] font-semibold uppercase tracking-[0.25em] text-primary sm:text-xs">
+                Our Time Together Since 18 May 2023 ♥
+              </p>
+              <TimeTogether />
+            </div>
+
+            <div className="mx-auto max-w-lg">
+              <p className="mb-2 text-center text-[10px] font-semibold uppercase tracking-[0.25em] text-accent sm:text-xs">
+                Countdown to Our Next Anniversary ✨
+              </p>
+              <Countdown />
+            </div>
           </div>
 
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:mt-10">
