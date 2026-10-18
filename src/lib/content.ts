@@ -417,8 +417,8 @@ export const content = {
       {
         id: "b4",
         category: "challenges",
-        title: "The Secret $5 Snack Swap",
-        desc: "Split up in a grocery or convenience store with $5 each and 5 minutes to pick surprise treats for each other.",
+        title: "The Secret 200 Birr Snack Swap",
+        desc: "Split up in a shop or kiosk with 200 birr each and 5 minutes to pick surprise snacks for each other.",
       },
 
       // Food & Treats
@@ -451,26 +451,26 @@ export const content = {
       {
         id: "b9",
         category: "dates",
-        title: "Sunset Walk With One Earbud Each",
-        desc: "Share a pair of earphones, put our favorite song on repeat, and wander as the sky turns golden-pink.",
+        title: "Cozy Macchiato & Endless Conversation",
+        desc: "Sit at a charming outdoor cafe terrace with warm macchiatos and talk for hours with our phones turned face down.",
       },
       {
         id: "b10",
         category: "dates",
-        title: "Night Drive to a City Viewpoint",
-        desc: "Drive up to a quiet spot overlooking the glittering city lights and just sit talking with the heater on.",
+        title: "Evening City Walk & Warm Street Snack",
+        desc: "Take a relaxed evening walk in the cool air, buy fresh roasted bekolo or warm kolo, and share it hand-in-hand.",
       },
       {
         id: "b11",
         category: "dates",
-        title: "Bookstore Secret Scavenger Hunt",
-        desc: "Roam the aisles to find the funniest children's book, the most dramatic cover, and a quote that feels like us.",
+        title: "Scenic Hillside Sunset & Golden Hour Photos",
+        desc: "Head up to a high scenic viewpoint overlooking the city skyline, watch the sunset, and take cute candid photos together.",
       },
       {
         id: "b12",
         category: "dates",
-        title: "Feed Birds at a Sunny Park",
-        desc: "Bring a bag of seeds or crumbs to the park on a sunny afternoon and sit side-by-side watching the water.",
+        title: "Fresh Layered Spris Juice Stop",
+        desc: "Stop by a lively juice bar for thick layered avocado-papaya spris, argue playfully over who gets the lime, and share every sip.",
       },
 
       // Sweet Moments
