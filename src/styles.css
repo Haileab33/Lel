@@ -78,6 +78,54 @@
   --shadow-polaroid: 0 12px 30px -10px rgba(0, 0, 0, 0.12), 0 4px 10px -2px rgba(0, 0, 0, 0.05);
 }
 
+.dark {
+  --background: #151113;
+  --foreground: #F5EFEB;
+  --card: #1E181B;
+  --card-foreground: #F5EFEB;
+  --popover: #1E181B;
+  --popover-foreground: #F5EFEB;
+  --primary: #F08D96;
+  --primary-foreground: #141113;
+  --secondary: #2C2127;
+  --secondary-foreground: #FADCE3;
+  --muted: #241D21;
+  --muted-foreground: #A89891;
+  --accent: #E5C368;
+  --accent-foreground: #141113;
+  --destructive: #F87171;
+  --destructive-foreground: #FFFFFF;
+  --border: #35282F;
+  --input: #35282F;
+  --ring: #F08D96;
+
+  /* Romantic Dark Mode Tones */
+  --blush: #2D1A20;
+  --lavender: #251B33;
+  --cream: #261E1A;
+  --sage: #1A261E;
+  --rose: #331A25;
+  --gold: #2E2516;
+
+  --gradient-romance: linear-gradient(135deg, #1C1318 0%, #241728 50%, #1A1517 100%);
+  --gradient-gold: linear-gradient(120deg, #F3E5AB, #D4AF37, #E5C368);
+  --shadow-soft: 0 16px 40px -12px rgba(240, 141, 150, 0.15);
+  --shadow-polaroid: 0 12px 30px -10px rgba(0, 0, 0, 0.6), 0 4px 10px -2px rgba(0, 0, 0, 0.4);
+}
+
+.dark .glass {
+  background: rgba(28, 22, 25, 0.85);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dark .tone-blush { background-color: var(--blush); border-color: #522B36; }
+.dark .tone-lavender { background-color: var(--lavender); border-color: #3F2B56; }
+.dark .tone-cream { background-color: var(--cream); border-color: #423024; }
+.dark .tone-sage { background-color: var(--sage); border-color: #263E2D; }
+.dark .tone-rose { background-color: var(--rose); border-color: #592539; }
+.dark .tone-gold { background-color: var(--gold); border-color: #503E1C; }
+
 @layer base {
   html {
     scroll-behavior: smooth;

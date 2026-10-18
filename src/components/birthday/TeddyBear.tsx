@@ -238,7 +238,7 @@ export function TeddyBear() {
           >
             <X className="h-3 w-3" />
           </button>
-          <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 h-3 w-3 rotate-45 bg-white border-r border-b border-primary/20" />
+          <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 h-3 w-3 rotate-45 bg-card border-r border-b border-primary/20" />
         </div>
       )}
 
@@ -456,7 +456,7 @@ export function TeddyBear() {
         </svg>
 
         {/* Floating Mini Scroll Badge */}
-        <div className="mt-1 flex items-center gap-1 rounded-full bg-white/90 px-2 py-0.5 text-[9px] font-bold text-primary shadow-sm border border-primary/20 backdrop-blur-sm transition group-hover:scale-105">
+        <div className="mt-1 flex items-center gap-1 rounded-full glass px-2 py-0.5 text-[9px] font-bold text-primary shadow-sm border border-primary/20 backdrop-blur-sm transition group-hover:scale-105">
           <span className="text-[10px]">{isScrolling ? "🐾" : "🧸"}</span>
           <span>{Math.round(scrollProgress)}%</span>
         </div>

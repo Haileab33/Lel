@@ -19,6 +19,7 @@ import {
 import { TeddyBear } from "@/components/birthday/TeddyBear";
 import { LoveJar } from "@/components/birthday/LoveJar";
 import { BucketList } from "@/components/birthday/BucketList";
+import { ThemeToggle } from "@/components/birthday/ThemeToggle";
 import { Heart, Menu, X, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -68,6 +69,9 @@ function Index() {
   if (!unlocked) {
     return (
       <>
+        <div className="fixed top-3 right-3 z-50 sm:top-4 sm:right-4">
+          <ThemeToggle className="glass shadow-soft" />
+        </div>
         <Gate onOpen={() => setUnlocked(true)} />
         <MusicPlayer isUnlocked={false} />
       </>
@@ -95,13 +99,16 @@ function Index() {
             ))}
           </nav>
 
-          <button
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary transition active:scale-95 lg:hidden"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle navigation menu"
-          >
-            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <button
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary transition active:scale-95 lg:hidden"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle navigation menu"
+            >
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
         </div>
       </header>
 
@@ -113,13 +120,16 @@ function Index() {
               <Heart className="h-6 w-6 fill-primary text-primary" />
               <span>{content.couple.herName}</span>
             </div>
-            <button
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-muted text-foreground transition active:scale-95"
-              aria-label="Close menu"
-            >
-              <X className="h-5 w-5" />
-            </button>
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-muted text-foreground transition active:scale-95"
+                aria-label="Close menu"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
           </div>
 
           <div className="my-auto space-y-2 py-4">
