@@ -22,7 +22,7 @@ export function BucketList() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [newDesc, setNewDesc] = useState("");
-  const [newCategory, setNewCategory] = useState("travel");
+  const [newCategory, setNewCategory] = useState(categories.find((c) => c.id !== "all")?.id || "challenges");
 
   // Load persistence
   useEffect(() => {
@@ -184,10 +184,13 @@ export function BucketList() {
                 onChange={(e) => setNewCategory(e.target.value)}
                 className="mt-1 w-full rounded-2xl border border-border bg-background/80 px-3.5 py-2.5 text-sm outline-none focus:border-primary"
               >
-                <option value="travel">✈️ Trips & Travel</option>
-                <option value="dates">🍜 Dates & Food</option>
-                <option value="silly">🧸 Cute & Silly</option>
-                <option value="milestones">💍 Milestones</option>
+                {categories
+                  .filter((c) => c.id !== "all")
+                  .map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.icon} {c.label}
+                    </option>
+                  ))}
               </select>
             </div>
             <div>
