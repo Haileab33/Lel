@@ -224,7 +224,6 @@ export const content = {
   media: {
     eyebrow: "Chapter Three",
     title: "Things I'd rather say out loud",
-    lede: "Put your headphones on. Or don't — the transcripts are right underneath.",
     voiceNotes: [
       {
         id: "1",
@@ -289,13 +288,6 @@ export const content = {
         fastener: "clip",
       },
       {
-        kicker: "Screenshot",
-        title: "The first message — April 9",
-        body: "The very first message on April 9, 2023. I still get butterflies reading it.",
-        tone: "blush",
-        fastener: "pin",
-      },
-      {
         kicker: "Sweet surprise",
         title: "A perfume surprise",
         body: "On December 14, you surprised me with a perfume gift. I was so touched and overjoyed.",
@@ -305,7 +297,7 @@ export const content = {
       {
         kicker: "Sweet memory",
         title: "My first hickey",
-        body: "March 18 — an unforgettable little mark you left on me.",
+        body: "March 18 — an unforgettable little mark ... I left on you.",
         tone: "rose",
         fastener: "corner",
       },
@@ -315,13 +307,6 @@ export const content = {
         body: "On December 28 — our peaceful late-night walk until 2:10 AM.",
         tone: "cream",
         fastener: "tape",
-      },
-      {
-        kicker: "Song",
-        title: "Our song — July 18",
-        body: "The song playing around the time of our first 'I love you'.",
-        tone: "lavender",
-        fastener: "pin",
       },
     ],
   },

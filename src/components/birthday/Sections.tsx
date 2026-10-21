@@ -387,7 +387,6 @@ export function Timeline() {
 
 export function Media() {
   const [playingId, setPlayingId] = useState<string | null>(null);
-  const [openTranscript, setOpenTranscript] = useState<string | null>(null);
   const audioRefs = useRef<{ [key: string]: HTMLAudioElement | null }>({});
 
   const toggleVoiceNote = (id: string) => {
@@ -449,19 +448,8 @@ export function Media() {
 
           <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground border-t border-border/40 pt-2.5">
             <span>Duration: {note.duration}</span>
-            <button
-              onClick={() => setOpenTranscript(openTranscript === note.id ? null : note.id)}
-              className="text-primary hover:underline font-medium active:opacity-70"
-            >
-              {openTranscript === note.id ? "Hide transcript" : "Read transcript"}
-            </button>
+            <span className="text-[11px] font-medium text-primary/70">Audio note 🎧</span>
           </div>
-
-          {openTranscript === note.id && (
-            <p className="mt-2.5 rounded-2xl bg-muted/60 p-3 text-xs italic text-foreground leading-relaxed animate-fade-rise">
-              "{note.transcript}"
-            </p>
-          )}
         </div>
       ))}
     </div>
@@ -486,23 +474,41 @@ export function Scrapbook() {
   const [img, setImg] = useState<string | undefined>();
 
   useEffect(() => {
-    const saved = localStorage.getItem("scrapbook-combined-v4");
+    const saved = localStorage.getItem("scrapbook-combined-v5");
     if (saved) {
       try {
         const parsed: MemoryItem[] = JSON.parse(saved);
-        setPages(parsed.filter((item) => item.title !== "The keychain"));
+        setPages(parsed);
         return;
       } catch {
         /* fallback to defaults */
       }
     }
-    setPages((content.scrapbook.pages as MemoryItem[]).filter((item) => item.title !== "The keychain"));
+    // Migrate any custom-added items from v4 if they exist
+    const oldSaved = localStorage.getItem("scrapbook-combined-v4");
+    if (oldSaved) {
+      try {
+        const parsed: MemoryItem[] = JSON.parse(oldSaved);
+        const customItems = parsed.filter(
+          (item) => item.id && !content.scrapbook.pages.some((p) => p.title === item.title) && item.title !== "The keychain" && item.title !== "The first message — April 9" && item.title !== "Our song — July 18"
+        );
+        if (customItems.length > 0) {
+          const merged = [...(content.scrapbook.pages as MemoryItem[]), ...customItems];
+          setPages(merged);
+          localStorage.setItem("scrapbook-combined-v5", JSON.stringify(merged));
+          return;
+        }
+      } catch {
+        /* ignore */
+      }
+    }
+    setPages(content.scrapbook.pages as MemoryItem[]);
+    localStorage.setItem("scrapbook-combined-v5", JSON.stringify(content.scrapbook.pages));
   }, []);
 
   const savePages = (newPages: MemoryItem[]) => {
-    const filtered = newPages.filter((item) => item.title !== "The keychain");
-    setPages(filtered);
-    localStorage.setItem("scrapbook-combined-v4", JSON.stringify(filtered));
+    setPages(newPages);
+    localStorage.setItem("scrapbook-combined-v5", JSON.stringify(newPages));
   };
 
   const handleImage = (file?: File) => {
