@@ -583,7 +583,7 @@ export const content = {
   bgMusic: {
     title: "ማመን አቃተኝ",
     artist: "Romantic Melody",
-    src: "/audio/bg-music.m4a",
+    src: "/audio/love-song.mp3",
     note: "ለእኔ ንግሥት የተመረጠ ሙዚቃ",
   },
 
@@ -591,7 +591,7 @@ export const content = {
     {
       title: "ማመን አቃተኝ",
       artist: "Romantic Melody",
-      src: "/audio/bg-music.m4a",
+      src: "/audio/love-song.mp3",
       note: "ለእኔ ንግሥት የተመረጠ ሙዚቃ",
     },
   ],
