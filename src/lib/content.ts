@@ -581,18 +581,18 @@ export const content = {
   },
 
   bgMusic: {
-    title: "Background Music",
-    artist: "Acoustic Melody",
-    src: "/audio/bg-music.mp3",
-    note: "Soft & slow music",
+    title: "ማመን አቃተኝ",
+    artist: "Romantic Melody",
+    src: "/audio/bg-music.m4a",
+    note: "ለእኔ ንግሥት የተመረጠ ሙዚቃ",
   },
 
   playlist: [
     {
-      title: "Background Music",
-      artist: "Acoustic Melody",
-      src: "/audio/bg-music.mp3",
-      note: "Soft & slow music",
+      title: "ማመን አቃተኝ",
+      artist: "Romantic Melody",
+      src: "/audio/bg-music.m4a",
+      note: "ለእኔ ንግሥት የተመረጠ ሙዚቃ",
     },
   ],
 

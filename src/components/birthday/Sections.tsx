@@ -841,12 +841,15 @@ export function MusicPlayer({ isUnlocked = true }: { isUnlocked?: boolean }) {
     <>
       <audio
         ref={audioRef}
-        src={track?.src}
+        src={track?.src || "/audio/bg-music.m4a"}
         preload="auto"
         onEnded={handleEnded}
         onPause={() => setIsPlaying(false)}
         onPlay={() => setIsPlaying(true)}
-      />
+      >
+        <source src={track?.src || "/audio/bg-music.m4a"} type="audio/mp4" />
+        <source src="/audio/bg-music.mp3" type="audio/mpeg" />
+      </audio>
 
       {isUnlocked && (
         <div className="fixed bottom-4 right-4 z-50 flex items-center gap-2">
