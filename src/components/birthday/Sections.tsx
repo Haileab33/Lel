@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { content } from "@/lib/content";
+import { supabase } from "@/lib/supabase";
 import { Play, Pause, Volume2, VolumeX, Music, ChevronRight, ChevronLeft, Heart, X, Sparkles, RefreshCw } from "lucide-react";
 
 export function Section({
@@ -473,49 +474,118 @@ export function Scrapbook() {
   const [kicker, setKicker] = useState("Memory");
   const [img, setImg] = useState<string | undefined>();
 
+  // Cloud sync helper for scrapbook
+  const syncScrapbookToCloud = async (newPages: MemoryItem[]) => {
+    try {
+      await supabase.from("scrapbook_state").upsert({
+        id: "shared",
+        pages: newPages,
+        updated_at: new Date().toISOString(),
+      });
+    } catch (err) {
+      console.error("Supabase scrapbook sync error:", err);
+    }
+  };
+
   useEffect(() => {
+    // 1. Initial optimistic load from localStorage
     const saved = localStorage.getItem("scrapbook-combined-v5");
     if (saved) {
       try {
         const parsed: MemoryItem[] = JSON.parse(saved);
         setPages(parsed);
-        return;
       } catch {
-        /* fallback to defaults */
+        setPages(content.scrapbook.pages as MemoryItem[]);
       }
+    } else {
+      setPages(content.scrapbook.pages as MemoryItem[]);
     }
-    // Migrate any custom-added items from v4 if they exist
-    const oldSaved = localStorage.getItem("scrapbook-combined-v4");
-    if (oldSaved) {
+
+    // 2. Fetch shared state from Supabase
+    const fetchCloud = async () => {
       try {
-        const parsed: MemoryItem[] = JSON.parse(oldSaved);
-        const customItems = parsed.filter(
-          (item) => item.id && !content.scrapbook.pages.some((p) => p.title === item.title) && item.title !== "The keychain" && item.title !== "The first message — April 9" && item.title !== "Our song — July 18"
-        );
-        if (customItems.length > 0) {
-          const merged = [...(content.scrapbook.pages as MemoryItem[]), ...customItems];
-          setPages(merged);
-          localStorage.setItem("scrapbook-combined-v5", JSON.stringify(merged));
-          return;
+        const { data, error } = await supabase
+          .from("scrapbook_state")
+          .select("pages")
+          .eq("id", "shared")
+          .maybeSingle();
+
+        if (data && !error) {
+          const cloudPages = Array.isArray(data.pages) ? (data.pages as MemoryItem[]) : [];
+          if (cloudPages.length > 0) {
+            setPages(cloudPages);
+            localStorage.setItem("scrapbook-combined-v5", JSON.stringify(cloudPages));
+          } else {
+            // Initialize cloud with current default pages
+            const initial = content.scrapbook.pages as MemoryItem[];
+            await syncScrapbookToCloud(initial);
+          }
         }
-      } catch {
-        /* ignore */
+      } catch (err) {
+        console.error("Failed to fetch cloud scrapbook:", err);
       }
-    }
-    setPages(content.scrapbook.pages as MemoryItem[]);
-    localStorage.setItem("scrapbook-combined-v5", JSON.stringify(content.scrapbook.pages));
+    };
+    fetchCloud();
+
+    // 3. Listen to Realtime updates across all opened devices
+    const channel = supabase
+      .channel("scrapbook_realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "scrapbook_state", filter: "id=eq.shared" },
+        (payload) => {
+          const row = payload.new as { pages?: MemoryItem[] };
+          if (row && Array.isArray(row.pages) && row.pages.length > 0) {
+            setPages(row.pages);
+            localStorage.setItem("scrapbook-combined-v5", JSON.stringify(row.pages));
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const savePages = (newPages: MemoryItem[]) => {
     setPages(newPages);
     localStorage.setItem("scrapbook-combined-v5", JSON.stringify(newPages));
+    syncScrapbookToCloud(newPages);
   };
 
   const handleImage = (file?: File) => {
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = () => {
-      setImg(reader.result as string);
+    reader.onload = (e) => {
+      const imgObj = new Image();
+      imgObj.onload = () => {
+        const maxDim = 1000;
+        let { width, height } = imgObj;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.drawImage(imgObj, 0, 0, width, height);
+          setImg(canvas.toDataURL("image/jpeg", 0.8));
+        } else {
+          setImg(e.target?.result as string);
+        }
+      };
+      imgObj.onerror = () => {
+        setImg(e.target?.result as string);
+      };
+      imgObj.src = e.target?.result as string;
     };
     reader.readAsDataURL(file);
   };

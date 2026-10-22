@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { content } from "@/lib/content";
+import { supabase } from "@/lib/supabase";
 import { Check, Plus, Sparkles, Compass, Heart, Trash2 } from "lucide-react";
 
 interface BucketItem {
@@ -24,8 +25,23 @@ export function BucketList() {
   const [newDesc, setNewDesc] = useState("");
   const [newCategory, setNewCategory] = useState(categories.find((c) => c.id !== "all")?.id || "challenges");
 
-  // Load persistence
+  // Cloud sync helper
+  const syncToCloud = async (completed: string[], custom: BucketItem[]) => {
+    try {
+      await supabase.from("bucket_list_state").upsert({
+        id: "shared",
+        completed_ids: completed,
+        custom_items: custom,
+        updated_at: new Date().toISOString(),
+      });
+    } catch (err) {
+      console.error("Supabase bucket list sync error:", err);
+    }
+  };
+
+  // Load persistence & real-time sync across all devices
   useEffect(() => {
+    // 1. Initial optimistic load from localStorage
     try {
       const savedCompleted = localStorage.getItem("future-bucket-list-completed-v1");
       if (savedCompleted) {
@@ -38,6 +54,65 @@ export function BucketList() {
     } catch {
       // Fallback
     }
+
+    // 2. Fetch shared state from Supabase
+    const fetchCloud = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("bucket_list_state")
+          .select("completed_ids, custom_items")
+          .eq("id", "shared")
+          .maybeSingle();
+
+        if (data && !error) {
+          const cloudCompleted = Array.isArray(data.completed_ids) ? data.completed_ids : [];
+          const cloudCustom = Array.isArray(data.custom_items) ? (data.custom_items as BucketItem[]) : [];
+
+          if (cloudCompleted.length > 0 || cloudCustom.length > 0) {
+            setCompletedIds(cloudCompleted);
+            setCustomItems(cloudCustom);
+            localStorage.setItem("future-bucket-list-completed-v1", JSON.stringify(cloudCompleted));
+            localStorage.setItem("future-bucket-list-custom-v1", JSON.stringify(cloudCustom));
+          } else {
+            // If cloud is empty but this device has local progress, push local to cloud
+            const localCompleted = JSON.parse(localStorage.getItem("future-bucket-list-completed-v1") || "[]");
+            const localCustom = JSON.parse(localStorage.getItem("future-bucket-list-custom-v1") || "[]");
+            if (localCompleted.length > 0 || localCustom.length > 0) {
+              await syncToCloud(localCompleted, localCustom);
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch cloud bucket list:", err);
+      }
+    };
+    fetchCloud();
+
+    // 3. Listen to Realtime updates across devices
+    const channel = supabase
+      .channel("bucket_list_realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "bucket_list_state", filter: "id=eq.shared" },
+        (payload) => {
+          const row = payload.new as { completed_ids?: string[]; custom_items?: BucketItem[] };
+          if (row) {
+            if (Array.isArray(row.completed_ids)) {
+              setCompletedIds(row.completed_ids);
+              localStorage.setItem("future-bucket-list-completed-v1", JSON.stringify(row.completed_ids));
+            }
+            if (Array.isArray(row.custom_items)) {
+              setCustomItems(row.custom_items);
+              localStorage.setItem("future-bucket-list-custom-v1", JSON.stringify(row.custom_items));
+            }
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const toggleItem = (id: string) => {
@@ -49,6 +124,7 @@ export function BucketList() {
     }
     setCompletedIds(nextCompleted);
     localStorage.setItem("future-bucket-list-completed-v1", JSON.stringify(nextCompleted));
+    syncToCloud(nextCompleted, customItems);
   };
 
   const handleAddItem = (e: React.FormEvent) => {
@@ -66,6 +142,7 @@ export function BucketList() {
     const nextCustom = [newItem, ...customItems];
     setCustomItems(nextCustom);
     localStorage.setItem("future-bucket-list-custom-v1", JSON.stringify(nextCustom));
+    syncToCloud(completedIds, nextCustom);
 
     setNewTitle("");
     setNewDesc("");
@@ -75,14 +152,12 @@ export function BucketList() {
   const removeCustomItem = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     const nextCustom = customItems.filter((item) => item.id !== id);
+    const nextCompleted = completedIds.filter((itemId) => itemId !== id);
     setCustomItems(nextCustom);
+    setCompletedIds(nextCompleted);
     localStorage.setItem("future-bucket-list-custom-v1", JSON.stringify(nextCustom));
-
-    if (completedIds.includes(id)) {
-      const nextCompleted = completedIds.filter((itemId) => itemId !== id);
-      setCompletedIds(nextCompleted);
-      localStorage.setItem("future-bucket-list-completed-v1", JSON.stringify(nextCompleted));
-    }
+    localStorage.setItem("future-bucket-list-completed-v1", JSON.stringify(nextCompleted));
+    syncToCloud(nextCompleted, nextCustom);
   };
 
   const allItems: BucketItem[] = [...customItems, ...defaultItems];
