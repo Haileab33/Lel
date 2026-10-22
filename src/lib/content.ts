@@ -583,7 +583,7 @@ export const content = {
   bgMusic: {
     title: "የህልሜ ንግስት",
     artist: "Romantic Melody",
-    src: "/audio/love-song.mp3",
+    src: "/audio/love-song-v2.mp3",
     note: "ለእኔ ንግሥት የተመረጠ ሙዚቃ",
   },
 
@@ -591,7 +591,7 @@ export const content = {
     {
       title: "የህልሜ ንግስት",
       artist: "Romantic Melody",
-      src: "/audio/love-song.mp3",
+      src: "/audio/love-song-v2.mp3",
       note: "ለእኔ ንግሥት የተመረጠ ሙዚቃ",
     },
   ],

@@ -774,7 +774,6 @@ export function MusicPlayer({ isUnlocked = true }: { isUnlocked?: boolean }) {
   const [isMuted, setIsMuted] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const hasSeekedRef = useRef(false);
 
   const track = content.bgMusic || content.playlist[0];
 
@@ -796,41 +795,11 @@ export function MusicPlayer({ isUnlocked = true }: { isUnlocked?: boolean }) {
     const audio = audioRef.current;
     if (!audio) return;
 
-    // Enforce 15s start on mobile & desktop
-    const ensureSeekTo15 = () => {
-      if (!hasSeekedRef.current && audio.currentTime < 14.8) {
-        try {
-          audio.currentTime = 15;
-          hasSeekedRef.current = true;
-        } catch {
-          // ignore
-        }
-      }
-    };
-
-    audio.addEventListener("loadedmetadata", ensureSeekTo15);
-    audio.addEventListener("canplay", ensureSeekTo15);
-    audio.addEventListener("playing", ensureSeekTo15);
-
-    const handleTimeUpdate = () => {
-      if (!hasSeekedRef.current && audio.currentTime < 14.8) {
-        try {
-          audio.currentTime = 15;
-          hasSeekedRef.current = true;
-        } catch {
-          // ignore
-        }
-      }
-    };
-    audio.addEventListener("timeupdate", handleTimeUpdate);
-
     const startPlayback = () => {
-      ensureSeekTo15();
       audio
         .play()
         .then(() => {
           setIsPlaying(true);
-          ensureSeekTo15();
           window.removeEventListener("pointerdown", startPlayback);
           window.removeEventListener("click", startPlayback);
           window.removeEventListener("keydown", startPlayback);
@@ -859,10 +828,6 @@ export function MusicPlayer({ isUnlocked = true }: { isUnlocked?: boolean }) {
       window.removeEventListener("click", startPlayback);
       window.removeEventListener("keydown", startPlayback);
       window.removeEventListener("scroll", startPlayback);
-      audio.removeEventListener("loadedmetadata", ensureSeekTo15);
-      audio.removeEventListener("canplay", ensureSeekTo15);
-      audio.removeEventListener("playing", ensureSeekTo15);
-      audio.removeEventListener("timeupdate", handleTimeUpdate);
     };
   }, [isUnlocked]);
 
@@ -873,22 +838,10 @@ export function MusicPlayer({ isUnlocked = true }: { isUnlocked?: boolean }) {
       audio.pause();
       setIsPlaying(false);
     } else {
-      if (!hasSeekedRef.current && audio.currentTime < 14.8) {
-        try {
-          audio.currentTime = 15;
-          hasSeekedRef.current = true;
-        } catch {
-          // ignore
-        }
-      }
       audio
         .play()
         .then(() => {
           setIsPlaying(true);
-          if (!hasSeekedRef.current && audio.currentTime < 14.8) {
-            audio.currentTime = 15;
-            hasSeekedRef.current = true;
-          }
         })
         .catch(() => {});
     }
@@ -902,8 +855,7 @@ export function MusicPlayer({ isUnlocked = true }: { isUnlocked?: boolean }) {
 
   const handleEnded = () => {
     if (!audioRef.current) return;
-    audioRef.current.currentTime = 15;
-    hasSeekedRef.current = true;
+    audioRef.current.currentTime = 0;
     audioRef.current.play().catch(() => {});
   };
 
@@ -911,14 +863,14 @@ export function MusicPlayer({ isUnlocked = true }: { isUnlocked?: boolean }) {
     <>
       <audio
         ref={audioRef}
-        src={track?.src || "/audio/love-song.mp3"}
+        src={track?.src || "/audio/love-song-v2.mp3"}
         preload="auto"
         onEnded={handleEnded}
         onPause={() => setIsPlaying(false)}
         onPlay={() => setIsPlaying(true)}
       >
-        <source src={track?.src || "/audio/love-song.mp3"} type="audio/mpeg" />
-        <source src="/audio/love-song.m4a" type="audio/mp4" />
+        <source src={track?.src || "/audio/love-song-v2.mp3"} type="audio/mpeg" />
+        <source src="/audio/love-song-v2.m4a" type="audio/mp4" />
       </audio>
 
       {isUnlocked && (
