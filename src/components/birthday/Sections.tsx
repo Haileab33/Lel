@@ -437,7 +437,9 @@ export function Media() {
           </div>
 
           <audio
-            ref={(el) => (audioRefs.current[note.id] = el)}
+            ref={(el) => {
+              audioRefs.current[note.id] = el;
+            }}
             onEnded={() => setPlayingId(null)}
             onPause={() => {
               if (playingId === note.id) setPlayingId(null);
@@ -466,7 +468,7 @@ type MemoryItem = {
   body: string;
   tone: string;
   fastener: "tape" | "clip" | "pin" | "corner";
-  img?: string;
+  img?: string | undefined;
 };
 
 export function Scrapbook() {

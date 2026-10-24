@@ -75,7 +75,7 @@ export function LoveJar() {
       id: Date.now() + i,
       x: (Math.random() - 0.5) * 220,
       y: -40 - Math.random() * 120,
-      char: icons[Math.floor(Math.random() * icons.length)],
+      char: icons[Math.floor(Math.random() * icons.length)] ?? "✨",
       scale: 1 + Math.random() * 0.8,
     }));
     setSparkleParticles(particles);
@@ -93,12 +93,12 @@ export function LoveJar() {
       // Choose a random reason (prefer unseen if possible)
       const unseen = reasons.filter((r) => !unlockedIds.includes(r.id));
       const pool = unseen.length > 0 ? unseen : reasons;
-      const picked = pool[Math.floor(Math.random() * pool.length)];
+      const picked = pool[Math.floor(Math.random() * pool.length)] ?? pool[0] ?? null;
 
       setCurrentReason(picked);
 
       // Update unlocked list
-      if (!unlockedIds.includes(picked.id)) {
+      if (picked && !unlockedIds.includes(picked.id)) {
         const nextUnlocked = [...unlockedIds, picked.id];
         setUnlockedIds(nextUnlocked);
         localStorage.setItem("love-jar-unlocked-v1", JSON.stringify(nextUnlocked));

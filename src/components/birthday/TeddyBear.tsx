@@ -94,7 +94,7 @@ export function TeddyBear() {
       id: Date.now() + i + Math.random(),
       x: (Math.random() - 0.5) * 60,
       y: -20 - Math.random() * 40,
-      char: chars[Math.floor(Math.random() * chars.length)],
+      char: chars[Math.floor(Math.random() * chars.length)] ?? "💖",
       size: 14 + Math.floor(Math.random() * 10),
     }));
 

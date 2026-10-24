@@ -224,6 +224,7 @@ export const content = {
   media: {
     eyebrow: "Chapter Three",
     title: "Things I'd rather say out loud",
+    lede: "Special voice notes, thoughts, and songs for your ears only.",
     voiceNotes: [
       {
         id: "1",
