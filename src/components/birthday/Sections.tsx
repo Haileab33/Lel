@@ -10,6 +10,7 @@ export function Section({
   lede,
   children,
   className = "",
+  titleClassName,
 }: {
   id: string;
   eyebrow: string;
@@ -797,18 +798,26 @@ export function MusicPlayer({ isUnlocked = true }: { isUnlocked?: boolean }) {
     if (!audio) return;
 
     const startPlayback = () => {
-      audio
-        .play()
-        .then(() => {
+      try {
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              setIsPlaying(true);
+              window.removeEventListener("pointerdown", startPlayback);
+              window.removeEventListener("click", startPlayback);
+              window.removeEventListener("keydown", startPlayback);
+              window.removeEventListener("scroll", startPlayback);
+            })
+            .catch(() => {
+              // Autoplay blocked by browser policy until interaction
+            });
+        } else {
           setIsPlaying(true);
-          window.removeEventListener("pointerdown", startPlayback);
-          window.removeEventListener("click", startPlayback);
-          window.removeEventListener("keydown", startPlayback);
-          window.removeEventListener("scroll", startPlayback);
-        })
-        .catch(() => {
-          // Autoplay blocked by browser policy until interaction
-        });
+        }
+      } catch {
+        // Ignore playback error
+      }
     };
 
     // Listen for external trigger to start background music
@@ -839,12 +848,16 @@ export function MusicPlayer({ isUnlocked = true }: { isUnlocked?: boolean }) {
       audio.pause();
       setIsPlaying(false);
     } else {
-      audio
-        .play()
-        .then(() => {
+      try {
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise.then(() => setIsPlaying(true)).catch(() => {});
+        } else {
           setIsPlaying(true);
-        })
-        .catch(() => {});
+        }
+      } catch {
+        // Ignore
+      }
     }
   };
 
@@ -857,7 +870,14 @@ export function MusicPlayer({ isUnlocked = true }: { isUnlocked?: boolean }) {
   const handleEnded = () => {
     if (!audioRef.current) return;
     audioRef.current.currentTime = 0;
-    audioRef.current.play().catch(() => {});
+    try {
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {});
+      }
+    } catch {
+      // Ignore
+    }
   };
 
   return (
