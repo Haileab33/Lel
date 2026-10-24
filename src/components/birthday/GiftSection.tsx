@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Sparkles, Gift, Heart, RotateCcw } from "lucide-react";
+import { Sparkles, Gift, Heart } from "lucide-react";
 import confetti from "canvas-confetti";
 import { content } from "@/lib/content";
 
@@ -232,10 +232,10 @@ export function GiftSection() {
             </div>
 
             <h4 className="mt-4 font-display text-3xl font-bold text-primary sm:text-4xl md:text-5xl">
-              A Giant Pink Teddy Bear For You! 🌸🧸
+              A Giant Teddy Bear For You! 🌸🧸
             </h4>
             <p className="mx-auto mt-2 max-w-md text-xs text-muted-foreground sm:text-sm">
-              Whenever I am not right beside you, squeeze this fluffy pink bear and know that I love you more than all the stars in the sky!
+              Whenever I am not right beside you, squeeze this fluffy bear and know that I love you more than all the stars in the sky!
             </p>
 
             {/* Giant Pink Teddy Bear Graphic */}
@@ -446,22 +446,11 @@ export function GiftSection() {
             {/* Handwritten Message Under Teddy */}
             <div className="rounded-2xl bg-pink-100/70 p-4 border border-pink-200">
               <p className="font-handwriting text-2xl sm:text-3xl font-bold text-pink-900 leading-snug">
-                "Here is your giant pink cuddle buddy, my queen! Made just for you to hug forever and ever."
+                "Here is your giant cuddle buddy, my queen! Made just for you to hug forever and ever."
               </p>
               <p className="mt-2 text-xs text-pink-700 font-medium">
                 Tap the bear anytime for an extra warm squeeze! 🐾💕
               </p>
-            </div>
-
-            {/* Try Another Gift Card Button */}
-            <div className="mt-6">
-              <button
-                onClick={handleReset}
-                className="inline-flex items-center gap-2 rounded-full border border-pink-300 bg-white px-5 py-2.5 text-xs font-semibold text-pink-700 shadow-sm transition hover:bg-pink-50 active:scale-95"
-              >
-                <RotateCcw className="h-3.5 w-3.5" />
-                <span>Choose another card</span>
-              </button>
             </div>
           </div>
         )}

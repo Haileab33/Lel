@@ -235,6 +235,26 @@
   animation: fly-out-note 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
+@keyframes float-particle-slow {
+  0% {
+    transform: translate(0, 0) scale(0.6);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(var(--tx, 0px), var(--ty, -70px)) scale(var(--tscale, 1.2));
+    opacity: 0;
+  }
+}
+.animate-particle-slow {
+  animation: float-particle-slow 2.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 @keyframes gift-bounce {
   0%, 100% { transform: translateY(0) scale(1); }
   50% { transform: translateY(-10px) scale(1.03); }

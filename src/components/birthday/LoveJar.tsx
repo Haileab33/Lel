@@ -70,13 +70,13 @@ export function LoveJar() {
     setFlyingNote(null);
 
     // Generate playful burst of floating hearts and sparkles around jar
-    const icons = ["✨", "💖", "🌸", "💌", "💕", "⭐", "🥰"];
-    const particles: FloatingParticle[] = Array.from({ length: 10 }).map((_, i) => ({
+    const icons = ["✨", "💖", "🌸", "💌", "💕", "⭐", "🥰", "❤️", "🌺"];
+    const particles: FloatingParticle[] = Array.from({ length: 14 }).map((_, i) => ({
       id: Date.now() + i,
-      x: (Math.random() - 0.5) * 160,
-      y: -20 - Math.random() * 80,
+      x: (Math.random() - 0.5) * 220,
+      y: -40 - Math.random() * 120,
       char: icons[Math.floor(Math.random() * icons.length)],
-      scale: 0.8 + Math.random() * 0.6,
+      scale: 1 + Math.random() * 0.8,
     }));
     setSparkleParticles(particles);
 
@@ -107,9 +107,13 @@ export function LoveJar() {
       setTimeout(() => {
         setIsRevealing(false);
         setFlyingNote(null);
-        setSparkleParticles([]);
       }, 700);
     }, 850);
+
+    // Keep particles visible for 2.4s so user can enjoy the slow float
+    setTimeout(() => {
+      setSparkleParticles([]);
+    }, 2400);
   };
 
   const toggleFavorite = (id: number) => {
@@ -168,15 +172,18 @@ export function LoveJar() {
                 isShaking ? "animate-jar-wiggle scale-105" : "hover:scale-105 active:scale-95"
               }`}
             >
-              {/* Dynamic flying hearts/sparkle particle burst when shaken */}
+              {/* Dynamic slow floating hearts/sparkle particle burst when shaken */}
               {sparkleParticles.map((p) => (
                 <div
                   key={p.id}
-                  className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 animate-ping z-20 text-2xl transition-all duration-700"
-                  style={{
-                    transform: `translate(${p.x}px, ${p.y}px) scale(${p.scale})`,
-                    opacity: isShaking ? 1 : 0,
-                  }}
+                  className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 animate-particle-slow z-20 text-3xl select-none"
+                  style={
+                    {
+                      "--tx": `${p.x}px`,
+                      "--ty": `${p.y}px`,
+                      "--tscale": p.scale,
+                    } as React.CSSProperties
+                  }
                 >
                   {p.char}
                 </div>
