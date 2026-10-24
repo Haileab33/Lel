@@ -205,7 +205,7 @@ export function TeddyBear() {
           : undefined
       }
       className={`fixed z-40 select-none touch-none ${
-        position ? "" : "bottom-5 left-4 sm:bottom-6 sm:left-6"
+        position ? "" : "bottom-5 left-3 sm:bottom-6 sm:left-6"
       } ${isDragging ? "cursor-grabbing scale-105" : "cursor-grab"}`}
       aria-label="Interactive Teddy Bear Companion"
     >
@@ -228,12 +228,12 @@ export function TeddyBear() {
       {showMessage && (
         <div
           onClick={(e) => e.stopPropagation()}
-          className="absolute -top-16 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1.5 whitespace-nowrap rounded-2xl glass px-3 py-1.5 shadow-soft border border-primary/30 text-xs font-semibold text-foreground backdrop-blur-xl animate-fade-rise"
+          className="absolute -top-16 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1.5 max-w-[260px] sm:max-w-none whitespace-normal sm:whitespace-nowrap rounded-2xl glass px-3 py-1.5 shadow-soft border border-primary/30 text-xs font-semibold text-foreground backdrop-blur-xl animate-fade-rise"
         >
           <span>{LOVE_MESSAGES[messageIndex]}</span>
           <button
             onClick={() => setShowMessage(false)}
-            className="ml-1 text-muted-foreground hover:text-foreground transition p-0.5 rounded-full"
+            className="ml-1 text-muted-foreground hover:text-foreground transition p-0.5 rounded-full shrink-0"
             aria-label="Close message"
           >
             <X className="h-3 w-3" />
@@ -258,17 +258,17 @@ export function TeddyBear() {
       >
         {/* Soft shadow that expands/contracts with bounce */}
         <div
-          className="absolute -bottom-1.5 h-3 w-16 rounded-full bg-black/15 blur-[3px] transition-all duration-200"
+          className="absolute -bottom-1.5 h-3 w-14 sm:w-16 rounded-full bg-black/15 blur-[3px] transition-all duration-200"
           style={{
             transform: `scale(${isScrolling ? (step % 2 === 0 ? 0.8 : 1.1) : 1})`,
             opacity: isScrolling ? (step % 2 === 0 ? 0.2 : 0.35) : 0.3,
           }}
         />
 
-        {/* Custom Hand-Crafted SVG Teddy Bear */}
+        {/* Custom Hand-Crafted SVG Teddy Bear - Scaled neatly for mobile screens */}
         <svg
           viewBox="0 0 100 115"
-          className="h-20 w-18 sm:h-24 sm:w-20 drop-shadow-md transition-transform duration-200 group-hover:scale-105"
+          className="h-16 w-14 sm:h-24 sm:w-20 drop-shadow-md transition-transform duration-200 group-hover:scale-105"
         >
           <defs>
             {/* Fur gradient */}

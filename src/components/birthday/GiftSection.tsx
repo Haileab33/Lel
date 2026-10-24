@@ -238,21 +238,21 @@ export function GiftSection() {
               Whenever I am not right beside you, squeeze this fluffy bear and know that I love you more than all the stars in the sky!
             </p>
 
-            {/* Giant Pink Teddy Bear Graphic */}
+            {/* Giant Teddy Bear Graphic - Responsive for mobile */}
             <div
               onClick={() => setBearHugging((prev) => !prev)}
-              className="relative mx-auto my-6 flex h-72 w-72 sm:h-80 sm:w-80 cursor-pointer items-center justify-center select-none transition-transform duration-300 hover:scale-105"
-              title="Click me for a hug!"
+              className="relative mx-auto my-4 sm:my-6 flex h-60 w-60 sm:h-80 sm:w-80 cursor-pointer items-center justify-center select-none transition-transform duration-300 hover:scale-105 active:scale-95"
+              title="Tap me for a hug!"
             >
-              {/* Floating hearts surrounding pink bear */}
-              <div className="pointer-events-none absolute -inset-4 animate-pulse opacity-80">
-                <span className="absolute top-2 left-6 text-2xl">💖</span>
-                <span className="absolute top-6 right-4 text-3xl">🌸</span>
-                <span className="absolute bottom-10 left-2 text-2xl">✨</span>
-                <span className="absolute bottom-4 right-8 text-2xl">💕</span>
+              {/* Floating hearts surrounding bear */}
+              <div className="pointer-events-none absolute -inset-3 sm:-inset-4 animate-pulse opacity-80">
+                <span className="absolute top-2 left-4 sm:left-6 text-xl sm:text-2xl">💖</span>
+                <span className="absolute top-4 sm:top-6 right-2 sm:right-4 text-2xl sm:text-3xl">🌸</span>
+                <span className="absolute bottom-8 sm:bottom-10 left-1 sm:left-2 text-xl sm:text-2xl">✨</span>
+                <span className="absolute bottom-3 sm:bottom-4 right-6 sm:right-8 text-xl sm:text-2xl">💕</span>
               </div>
 
-              {/* Handcrafted Big Pink Teddy Bear SVG */}
+              {/* Handcrafted Big Teddy Bear SVG */}
               <svg viewBox="0 0 200 220" className="h-full w-full drop-shadow-2xl">
                 <defs>
                   {/* Big Pink Bear Fur Gradient */}

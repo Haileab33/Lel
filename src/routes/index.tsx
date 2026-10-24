@@ -114,10 +114,10 @@ function Index() {
         </div>
       </header>
 
-      {/* Fullscreen Mobile Drawer Navigation Sheet */}
+      {/* Fullscreen Mobile Drawer Navigation Sheet with Safe-Area & Smooth Scroll */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 flex flex-col justify-between bg-background/95 p-6 backdrop-blur-2xl animate-fade-rise lg:hidden">
-          <div className="flex items-center justify-between border-b border-border/60 pb-4">
+        <div className="fixed inset-0 z-50 flex flex-col justify-between bg-background/95 p-5 pb-8 backdrop-blur-2xl animate-fade-rise lg:hidden overflow-y-auto">
+          <div className="flex items-center justify-between border-b border-border/60 pb-4 shrink-0">
             <div className="flex items-center gap-2 font-script text-3xl text-primary font-bold">
               <Heart className="h-6 w-6 fill-primary text-primary" />
               <span>{content.couple.herName}</span>
@@ -141,7 +141,7 @@ function Index() {
                 key={id}
                 href={`#${id}`}
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-between rounded-2xl bg-card border border-border/60 px-5 py-3.5 text-base font-medium text-foreground shadow-sm transition active:scale-[0.98] active:bg-primary active:text-white"
+                className="flex items-center justify-between rounded-2xl bg-card border border-border/60 px-5 py-3 text-base font-medium text-foreground shadow-sm transition active:scale-[0.98] active:bg-primary active:text-white"
               >
                 <span className="font-display text-lg font-semibold">{label}</span>
                 <span className="text-xs font-semibold text-primary/70 uppercase tracking-widest">{chapter}</span>
@@ -149,7 +149,7 @@ function Index() {
             ))}
           </div>
 
-          <div className="border-t border-border/60 pt-4 text-center">
+          <div className="border-t border-border/60 pt-4 text-center shrink-0">
             <p className="font-script text-2xl text-primary">Made with love for {content.couple.herName} ♥</p>
           </div>
         </div>

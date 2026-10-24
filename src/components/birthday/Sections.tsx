@@ -895,14 +895,14 @@ export function MusicPlayer({ isUnlocked = true }: { isUnlocked?: boolean }) {
       </audio>
 
       {isUnlocked && (
-        <div className="fixed bottom-4 right-4 z-50 flex items-center gap-2">
+        <div className="fixed bottom-3 right-3 sm:bottom-4 sm:right-4 z-50 flex items-center gap-2">
           {!isPlaying && !isExpanded && (
             <button
               onClick={togglePlay}
               aria-label="Start background music"
-              className="flex items-center gap-1.5 rounded-full bg-primary/95 text-white px-3.5 py-2 text-xs font-semibold shadow-xl backdrop-blur-md animate-bounce border border-white/20 transition active:scale-95 hover:bg-primary"
+              className="flex items-center gap-1.5 rounded-full bg-primary/95 text-white px-3 py-1.5 sm:px-3.5 sm:py-2 text-[11px] sm:text-xs font-semibold shadow-xl backdrop-blur-md animate-bounce border border-white/20 transition active:scale-95 hover:bg-primary"
             >
-              <span>🎵 Tap to start music</span>
+              <span>🎵 Tap for music</span>
             </button>
           )}
 
@@ -910,7 +910,7 @@ export function MusicPlayer({ isUnlocked = true }: { isUnlocked?: boolean }) {
         <button
           onClick={() => setIsExpanded(true)}
           aria-label="Open background music controls"
-          className="relative flex h-12 w-12 items-center justify-center rounded-full bg-primary/90 text-white shadow-xl backdrop-blur-md border border-primary/30 transition-all duration-300 hover:scale-105 active:scale-95"
+          className="relative flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-primary/90 text-white shadow-xl backdrop-blur-md border border-primary/30 transition-all duration-300 hover:scale-105 active:scale-95"
         >
           {isPlaying && (
             <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
@@ -918,16 +918,16 @@ export function MusicPlayer({ isUnlocked = true }: { isUnlocked?: boolean }) {
               <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-rose-400" />
             </span>
           )}
-          <Music className={`h-5 w-5 ${isPlaying ? "animate-pulse text-white" : "text-white/80"}`} />
+          <Music className={`h-4 w-4 sm:h-5 sm:w-5 ${isPlaying ? "animate-pulse text-white" : "text-white/80"}`} />
         </button>
       ) : (
-        <div className="glass flex items-center gap-2.5 rounded-full px-3.5 py-2 shadow-2xl border-primary/40 backdrop-blur-xl transition-all duration-300 animate-fade-rise max-w-[calc(100vw-2rem)] sm:max-w-sm">
+        <div className="glass flex items-center gap-2 sm:gap-2.5 rounded-full px-3 py-1.5 sm:px-3.5 sm:py-2 shadow-2xl border-primary/40 backdrop-blur-xl transition-all duration-300 animate-fade-rise max-w-[calc(100vw-1.5rem)] sm:max-w-sm">
           <button
             onClick={togglePlay}
             aria-label={isPlaying ? "Pause background music" : "Play background music"}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-white shadow-md transition active:scale-95 sm:h-10 sm:w-10"
+            className="flex h-8 w-8 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full bg-primary text-white shadow-md transition active:scale-95"
           >
-            {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 ml-0.5" />}
+            {isPlaying ? <Pause className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> : <Play className="h-3.5 w-3.5 sm:h-4 sm:w-4 ml-0.5" />}
           </button>
 
           <div className="min-w-0 flex-1">
@@ -949,7 +949,7 @@ export function MusicPlayer({ isUnlocked = true }: { isUnlocked?: boolean }) {
           <button
             onClick={() => setIsExpanded(false)}
             aria-label="Minimize music player"
-            className="text-muted-foreground hover:text-foreground active:scale-95 p-1 border-l border-border/50 pl-2"
+            className="text-muted-foreground hover:text-foreground active:scale-95 p-1 border-l border-border/50 pl-1.5 sm:pl-2"
           >
             <X className="h-4 w-4" />
           </button>
