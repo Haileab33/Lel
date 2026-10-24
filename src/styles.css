@@ -213,6 +213,55 @@
   animation: fade-rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+@keyframes jar-wiggle {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  15% { transform: rotate(-8deg) scale(1.05); }
+  30% { transform: rotate(8deg) scale(1.08); }
+  45% { transform: rotate(-6deg) scale(1.06); }
+  60% { transform: rotate(6deg) scale(1.08); }
+  75% { transform: rotate(-3deg) scale(1.04); }
+  90% { transform: rotate(2deg) scale(1.02); }
+}
+.animate-jar-wiggle {
+  animation: jar-wiggle 0.75s ease-in-out infinite;
+}
+
+@keyframes fly-out-note {
+  0% { transform: translateY(0) scale(0.3) rotate(0deg); opacity: 0; }
+  50% { transform: translateY(-70px) scale(1.1) rotate(-8deg); opacity: 1; }
+  100% { transform: translateY(-110px) scale(1) rotate(6deg); opacity: 0; }
+}
+.animate-fly-out-note {
+  animation: fly-out-note 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes gift-bounce {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-10px) scale(1.03); }
+}
+.animate-gift-bounce {
+  animation: gift-bounce 2s ease-in-out infinite;
+}
+
+@keyframes gift-open-lid {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-30px) rotate(-18deg) scale(1.1); }
+  100% { transform: translateY(-55px) rotate(-35deg) scale(0.9); opacity: 0; }
+}
+.animate-gift-open-lid {
+  animation: gift-open-lid 0.85s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes bear-pop-out {
+  0% { transform: translateY(60px) scale(0.2); opacity: 0; }
+  60% { transform: translateY(-15px) scale(1.1); opacity: 1; }
+  85% { transform: translateY(5px) scale(0.97); }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+.animate-bear-pop-out {
+  animation: bear-pop-out 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
 /* Polaroid Card Fasteners */
 .fastener-tape::before {
   content: "";

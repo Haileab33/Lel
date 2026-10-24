@@ -18,6 +18,7 @@ import {
 } from "@/components/birthday/Sections";
 import { TeddyBear } from "@/components/birthday/TeddyBear";
 import { LoveJar } from "@/components/birthday/LoveJar";
+import { GiftSection } from "@/components/birthday/GiftSection";
 import { BucketList } from "@/components/birthday/BucketList";
 import { ThemeToggle } from "@/components/birthday/ThemeToggle";
 import { Heart, Menu, X, Sparkles } from "lucide-react";
@@ -41,9 +42,10 @@ const navLinks = [
   ["media", "Listen", "03"],
   ["scrapbook", "Scrapbook", "04"],
   ["jar", "Love Jar", "05"],
-  ["bucket-list", "Bucket List", "06"],
-  ["countdown", "Milestones", "07"],
-  ["quotes", "For You", "08"],
+  ["gifts", "Gifts", "06"],
+  ["bucket-list", "Bucket List", "07"],
+  ["countdown", "Milestones", "08"],
+  ["quotes", "For You", "09"],
 ] as const;
 
 function Index() {
@@ -231,10 +233,20 @@ function Index() {
         </Section>
 
         <div className="bg-muted/40">
-          <Section id="bucket-list" eyebrow={content.bucketList.eyebrow} title={content.bucketList.title} lede={content.bucketList.lede}>
-            <BucketList />
+          <Section
+            id="gifts"
+            eyebrow="Special Surprise"
+            title="A Gift For My Queen"
+            titleClassName="font-display text-3xl sm:text-5xl text-primary font-bold"
+            lede="Choose one of the cards to unwrap your special birthday present."
+          >
+            <GiftSection />
           </Section>
         </div>
+
+        <Section id="bucket-list" eyebrow={content.bucketList.eyebrow} title={content.bucketList.title} lede={content.bucketList.lede}>
+          <BucketList />
+        </Section>
 
         <Section id="countdown" eyebrow={content.countdown.eyebrow} title={content.countdown.title} lede={content.countdown.lede}>
           <CountdownSection />

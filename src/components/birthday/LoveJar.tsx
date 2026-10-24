@@ -1,11 +1,20 @@
 import { useState, useEffect, useRef } from "react";
 import { content } from "@/lib/content";
 import { Sparkles, Heart, RefreshCw, Copy, Check, Star, BookmarkCheck, BookOpen, X } from "lucide-react";
+import confetti from "canvas-confetti";
 
 interface LoveReason {
   id: number;
   type: string;
   text: string;
+}
+
+interface FloatingParticle {
+  id: number;
+  x: number;
+  y: number;
+  char: string;
+  scale: number;
 }
 
 export function LoveJar() {
@@ -14,10 +23,13 @@ export function LoveJar() {
   const [currentReason, setCurrentReason] = useState<LoveReason | null>(null);
   const [isShaking, setIsShaking] = useState(false);
   const [isRevealing, setIsRevealing] = useState(false);
+  const [flyingNote, setFlyingNote] = useState<string | null>(null);
+  const [sparkleParticles, setSparkleParticles] = useState<FloatingParticle[]>([]);
   const [unlockedIds, setUnlockedIds] = useState<number[]>([]);
   const [favorites, setFavorites] = useState<number[]>([]);
   const [copied, setCopied] = useState(false);
   const [showAllModal, setShowAllModal] = useState(false);
+  const jarRef = useRef<HTMLDivElement | null>(null);
 
   // Load unlocked and favorites from localStorage
   useEffect(() => {
@@ -35,13 +47,48 @@ export function LoveJar() {
     }
   }, []);
 
+  const triggerConfetti = () => {
+    try {
+      // Burst celebratory hearts and sparkles confetti
+      confetti({
+        particleCount: 45,
+        spread: 60,
+        origin: { y: 0.65 },
+        colors: ["#FDA4AF", "#F43F5E", "#E11D48", "#FBBF24", "#FFD1DC"],
+        disableForReducedMotion: true,
+      });
+    } catch {
+      // Ignore if running in non-browser env
+    }
+  };
+
   const drawReason = () => {
     if (isShaking || isRevealing) return;
 
+    // Trigger rich jar wiggle & particle burst
     setIsShaking(true);
+    setFlyingNote(null);
+
+    // Generate playful burst of floating hearts and sparkles around jar
+    const icons = ["✨", "💖", "🌸", "💌", "💕", "⭐", "🥰"];
+    const particles: FloatingParticle[] = Array.from({ length: 10 }).map((_, i) => ({
+      id: Date.now() + i,
+      x: (Math.random() - 0.5) * 160,
+      y: -20 - Math.random() * 80,
+      char: icons[Math.floor(Math.random() * icons.length)],
+      scale: 0.8 + Math.random() * 0.6,
+    }));
+    setSparkleParticles(particles);
+
+    // Trigger flying origami slip out of jar mouth
+    setTimeout(() => {
+      setFlyingNote("💌");
+    }, 450);
+
     setTimeout(() => {
       setIsShaking(false);
       setIsRevealing(true);
+      triggerConfetti();
 
       // Choose a random reason (prefer unseen if possible)
       const unseen = reasons.filter((r) => !unlockedIds.includes(r.id));
@@ -59,8 +106,10 @@ export function LoveJar() {
 
       setTimeout(() => {
         setIsRevealing(false);
-      }, 500);
-    }, 600);
+        setFlyingNote(null);
+        setSparkleParticles([]);
+      }, 700);
+    }, 850);
   };
 
   const toggleFavorite = (id: number) => {
@@ -113,11 +162,33 @@ export function LoveJar() {
           {/* Glass Jar Graphic & Button */}
           <div className="flex flex-col items-center">
             <div
+              ref={jarRef}
               onClick={drawReason}
               className={`group relative cursor-pointer select-none transition-transform duration-300 ${
-                isShaking ? "animate-bounce" : "hover:scale-105 active:scale-95"
+                isShaking ? "animate-jar-wiggle scale-105" : "hover:scale-105 active:scale-95"
               }`}
             >
+              {/* Dynamic flying hearts/sparkle particle burst when shaken */}
+              {sparkleParticles.map((p) => (
+                <div
+                  key={p.id}
+                  className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 animate-ping z-20 text-2xl transition-all duration-700"
+                  style={{
+                    transform: `translate(${p.x}px, ${p.y}px) scale(${p.scale})`,
+                    opacity: isShaking ? 1 : 0,
+                  }}
+                >
+                  {p.char}
+                </div>
+              ))}
+
+              {/* Animated origami love letter flying straight out of the jar neck */}
+              {flyingNote && (
+                <div className="pointer-events-none absolute left-1/2 top-6 -translate-x-1/2 z-30 animate-fly-out-note text-4xl filter drop-shadow-md">
+                  {flyingNote}
+                </div>
+              )}
+
               {/* Floating decorative sparkles around jar */}
               <div className="pointer-events-none absolute -inset-6 animate-pulse opacity-70">
                 <span className="absolute top-2 left-4 text-xl">✨</span>
@@ -151,9 +222,17 @@ export function LoveJar() {
                   </linearGradient>
                 </defs>
 
-                {/* Cork Stopper Top */}
-                <path d="M48 24 L112 24 L106 40 L54 40 Z" fill="url(#corkGrad)" stroke="#8C5832" strokeWidth="1.5" />
-                <ellipse cx="80" cy="24" rx="32" ry="6" fill="#D9A574" stroke="#8C5832" strokeWidth="1.5" />
+                {/* Cork Stopper Top (pops up slightly when opening) */}
+                <g
+                  className="transition-transform duration-300"
+                  style={{
+                    transform: isShaking ? "translateY(-12px) rotate(-4deg)" : "translateY(0) rotate(0deg)",
+                    transformOrigin: "80px 24px",
+                  }}
+                >
+                  <path d="M48 24 L112 24 L106 40 L54 40 Z" fill="url(#corkGrad)" stroke="#8C5832" strokeWidth="1.5" />
+                  <ellipse cx="80" cy="24" rx="32" ry="6" fill="#D9A574" stroke="#8C5832" strokeWidth="1.5" />
+                </g>
 
                 {/* Jar Lip / Neck */}
                 <rect x="50" y="40" width="60" height="12" rx="4" fill="rgba(255, 255, 255, 0.85)" stroke="#D4A5A5" strokeWidth="1.5" />
@@ -183,7 +262,13 @@ export function LoveJar() {
                 />
 
                 {/* Colorful Floating Origami Notes inside Jar */}
-                <g className="transition-transform duration-500">
+                <g
+                  className="transition-transform duration-500"
+                  style={{
+                    transform: isShaking ? "scale(1.08) rotate(3deg)" : "scale(1)",
+                    transformOrigin: "80px 145px",
+                  }}
+                >
                   {/* Folded paper slip 1 */}
                   <path d="M42 145 L62 135 L68 155 L48 165 Z" fill="#F472B6" opacity="0.85" />
                   {/* Folded paper slip 2 */}
