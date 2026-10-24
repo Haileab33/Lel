@@ -287,10 +287,6 @@ export function Gallery() {
             >
               <div className="relative overflow-hidden rounded-2xl aspect-[4/3] sm:aspect-[3/4]">
                 <img src={p.src} alt={p.alt} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-700 sm:group-hover:scale-105" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-90 sm:opacity-0 sm:transition-opacity sm:duration-300 sm:group-hover:opacity-100" />
-                <span className="absolute bottom-2.5 left-3 right-3 text-xs italic text-white leading-tight">
-                  {p.caption}
-                </span>
               </div>
               <div className="px-2 pt-2 pb-0.5 flex items-center justify-between">
                 <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">{p.chapter}</span>
@@ -310,13 +306,10 @@ export function Gallery() {
             >
               <X className="h-4 w-4" />
             </button>
-            <div className="max-h-[55vh] sm:max-h-[65vh] overflow-hidden rounded-2xl bg-black">
-              <img src={photos[openIndex]!.src} alt={photos[openIndex]!.alt} className="max-h-[55vh] sm:max-h-[65vh] w-full object-contain" />
+            <div className="max-h-[70vh] sm:max-h-[75vh] overflow-hidden rounded-2xl bg-black">
+              <img src={photos[openIndex]!.src} alt={photos[openIndex]!.alt} className="max-h-[70vh] sm:max-h-[75vh] w-full object-contain" />
             </div>
-            <figcaption className="mt-3 text-center font-display text-lg italic text-foreground sm:mt-4 sm:text-2xl">
-              "{photos[openIndex]!.caption}"
-            </figcaption>
-            <div className="mt-1 text-center text-[10px] text-muted-foreground uppercase tracking-widest sm:text-xs">
+            <div className="mt-2 text-center text-[10px] text-muted-foreground uppercase tracking-widest sm:text-xs">
               {photos[openIndex]!.chapter} • {openIndex + 1} of {photos.length}
             </div>
             <div className="mt-4 flex justify-center gap-2 sm:gap-3">

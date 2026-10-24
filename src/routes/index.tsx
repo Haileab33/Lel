@@ -172,7 +172,7 @@ function Index() {
           <div className="mt-8 space-y-6 sm:mt-10 sm:space-y-8">
             <div className="mx-auto max-w-md">
               <p className="mb-2 text-center text-[10px] font-semibold uppercase tracking-[0.25em] text-primary sm:text-xs">
-                Our Time Together Since 18 May 2023 ♥
+                Our Time Together ♥
               </p>
               <TimeTogether />
             </div>
