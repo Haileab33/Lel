@@ -220,7 +220,13 @@ function Index() {
           </Section>
         </div>
 
-        <Section id="jar" eyebrow={content.loveJar.eyebrow} title={content.loveJar.title} lede={content.loveJar.lede}>
+        <Section
+          id="jar"
+          eyebrow={content.loveJar.eyebrow}
+          title={content.loveJar.title}
+          titleClassName="font-handwriting text-3xl sm:text-6xl text-primary font-bold"
+          lede={content.loveJar.lede}
+        >
           <LoveJar />
         </Section>
 

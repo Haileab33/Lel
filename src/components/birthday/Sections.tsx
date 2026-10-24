@@ -17,12 +17,13 @@ export function Section({
   lede?: string;
   children: ReactNode;
   className?: string;
+  titleClassName?: string;
 }) {
   return (
     <section id={id} className={`mx-auto max-w-6xl scroll-mt-20 px-4 py-12 sm:px-6 sm:py-24 ${className}`}>
       <div className="mb-8 text-center animate-fade-rise sm:mb-12">
         <p className="font-script text-2xl text-primary sm:text-4xl">{eyebrow}</p>
-        <h2 className="mt-1 text-2xl font-semibold tracking-tight text-foreground sm:text-5xl">{title}</h2>
+        <h2 className={`mt-1 font-semibold tracking-tight text-foreground ${titleClassName || "text-2xl sm:text-5xl"}`}>{title}</h2>
         {lede && <p className="mx-auto mt-2 max-w-xl text-xs text-muted-foreground sm:mt-3 sm:text-base">{lede}</p>}
         <div className="mx-auto mt-3 h-1 w-16 rounded-full bg-gold sm:mt-4 sm:w-20" />
       </div>

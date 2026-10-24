@@ -39,7 +39,12 @@
   --color-gold: var(--gold);
   --font-display: "Cormorant Garamond", "Playfair Display", serif;
   --font-script: "Great Vibes", cursive;
+  --font-handwriting: "Caveat", cursive, sans-serif;
   --font-sans: "Inter", "Jost", sans-serif;
+}
+
+.font-handwriting {
+  font-family: var(--font-handwriting);
 }
 
 :root {

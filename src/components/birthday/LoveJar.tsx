@@ -285,8 +285,8 @@ export function LoveJar() {
 
                 {/* Reason Text Body */}
                 <div className="py-6 sm:py-8">
-                  <p className="font-script text-2xl text-primary sm:text-3xl">Reason #{currentReason.id}</p>
-                  <p className="mt-3 font-display text-xl italic leading-relaxed text-foreground sm:text-2xl">
+                  <p className="font-handwriting text-3xl font-bold text-primary sm:text-4xl">Reason #{currentReason.id}</p>
+                  <p className="mt-3 font-handwriting text-2xl font-medium leading-relaxed text-foreground sm:text-3xl tracking-wide">
                     "{currentReason.text}"
                   </p>
                 </div>
@@ -294,14 +294,14 @@ export function LoveJar() {
                 {/* Footer Signature */}
                 <div className="flex items-center justify-between border-t border-border/60 pt-3 text-xs text-muted-foreground">
                   <span>Forever yours</span>
-                  <span className="font-script text-xl text-primary sm:text-2xl">— {content.couple.yourName} ♥</span>
+                  <span className="font-handwriting text-2xl font-bold text-primary sm:text-3xl">— {content.couple.yourName} ♥</span>
                 </div>
               </div>
             ) : (
               /* Empty state before first draw */
               <div className="glass flex w-full max-w-md flex-col items-center justify-center rounded-3xl border border-dashed border-primary/40 p-8 text-center shadow-soft sm:p-12">
                 <span className="text-4xl sm:text-5xl">💌</span>
-                <h4 className="mt-3 font-display text-xl font-bold text-foreground sm:text-2xl">The Love Jar Is Waiting</h4>
+                <h4 className="mt-3 font-handwriting text-3xl font-bold text-foreground sm:text-4xl">The Love Jar Is Waiting</h4>
                 <p className="mt-2 text-xs text-muted-foreground sm:text-sm">
                   Inside this jar are {reasons.length} handwritten reasons why you are the love of my life. Tap the jar to pull out your first note!
                 </p>
@@ -360,7 +360,7 @@ export function LoveJar() {
                               {r.type}
                             </span>
                           </div>
-                          <p className="font-display text-base italic text-foreground/90 sm:text-lg">"{r.text}"</p>
+                          <p className="font-handwriting text-xl font-medium leading-relaxed text-foreground/90 sm:text-2xl">"{r.text}"</p>
                         </div>
                         <button
                           onClick={() => toggleFavorite(r.id)}

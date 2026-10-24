@@ -535,7 +535,7 @@ export const content = {
     ],
     borrowed: [
       {
-        text: "Whatever our souls are made of, his and mine are the same.",
+        text: "Whatever our souls are made of, mine and hers are the same.",
         by: "Emily Brontë, Wuthering Heights",
       },
       {
