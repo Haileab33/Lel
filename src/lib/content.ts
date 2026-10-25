@@ -171,8 +171,8 @@ export const content = {
     milestones: [
       {
         date: "9 April 2023",
-        title: "The day we met & our first message",
-        body: "The day we first met and sent our very first message to each other. The start of everything.",
+        title: "Our first message",
+        body: "The day we sent our very first message to each other. The start of everything.",
         artifact: null,
       },
       {
@@ -189,14 +189,26 @@ export const content = {
       },
       {
         date: "18 July 2023",
-        title: "The first 'I love you'",
+        title: "The first 'Ewedehalew'",
         body: "The moment those three special words were spoken out loud for the very first time.",
+        artifact: null,
+      },
+      {
+        date: "18 July 2023",
+        title: "Our first kiss",
+        body: "July 18 — one of my favorite memories and truly the best day ever.",
         artifact: null,
       },
       {
         date: "3 November 2023",
         title: "Growing stronger together",
         body: "We faced challenges together and came out closer and stronger than ever before.",
+        artifact: null,
+      },
+      {
+        date: "18 March 2024",
+        title: "First hickey",
+        body: "March 18 — an unforgettable little mark left with all my love.",
         artifact: null,
       },
       {
@@ -495,7 +507,7 @@ export const content = {
     events: [
       {
         date: "04-09",
-        label: "The day we met & our first message",
+        label: "Our first message",
         note: "April 9, 2023 — the best beginning of my life.",
       },
       {
@@ -510,7 +522,7 @@ export const content = {
       },
       {
         date: "07-18",
-        label: "The first 'I love you'",
+        label: "The first 'Ewedehalew'",
         note: "July 18, 2023 — three words that changed everything.",
       },
       {
