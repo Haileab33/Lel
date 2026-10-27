@@ -9,6 +9,15 @@ interface GiftCard {
   hint: string;
   ribbonColor: string;
   boxColor: string;
+  bgGradStart?: string;
+  bgGradEnd?: string;
+  borderColor?: string;
+  glowColor?: string;
+  ringColor?: string;
+  ribbonGradStart: string;
+  ribbonGradEnd: string;
+  ribbonStroke: string;
+  boxStroke: string;
 }
 
 const CARDS: GiftCard[] = [
@@ -18,20 +27,38 @@ const CARDS: GiftCard[] = [
     hint: "Wrapped with all my endless adoration",
     ribbonColor: "#F43F5E",
     boxColor: "from-rose-100 to-pink-200 border-rose-300",
+    ribbonGradStart: "#FB7185",
+    ribbonGradEnd: "#E11D48",
+    ribbonStroke: "#BE123C",
+    boxStroke: "#FDA4AF",
+    glowColor: "bg-pink-300/40 group-hover:bg-pink-400/50",
+    ringColor: "ring-pink-400",
   },
   {
     id: 2,
     label: "Card #2: Pure Magic ✨",
     hint: "A cozy secret kept straight from the heart",
-    ribbonColor: "#EC4899",
-    boxColor: "from-pink-100 to-rose-200 border-pink-300",
+    ribbonColor: "#ED8231",
+    boxColor: "from-orange-50 to-amber-100/80 border-[#ED8231]/40",
+    ribbonGradStart: "#FFA25B",
+    ribbonGradEnd: "#ED8231",
+    ribbonStroke: "#C96116",
+    boxStroke: "#FDBA74",
+    glowColor: "bg-amber-300/40 group-hover:bg-orange-400/50",
+    ringColor: "ring-[#ED8231]",
   },
   {
     id: 3,
     label: "Card #3: Always & Forever 💍",
     hint: "Full of cuddles, smiles, and warm hugs",
-    ribbonColor: "#D946EF",
-    boxColor: "from-fuchsia-100 to-pink-200 border-fuchsia-300",
+    ribbonColor: "#F54927",
+    boxColor: "from-red-50 to-orange-100/80 border-[#F54927]/40",
+    ribbonGradStart: "#FF7355",
+    ribbonGradEnd: "#F54927",
+    ribbonStroke: "#C63012",
+    boxStroke: "#FCA5A5",
+    glowColor: "bg-orange-300/40 group-hover:bg-red-400/50",
+    ringColor: "ring-[#F54927]",
   },
 ];
 
@@ -116,7 +143,7 @@ export function GiftSection() {
                     card.boxColor
                   } ${
                     isChosen && isOpening
-                      ? "scale-105 ring-4 ring-pink-400 ring-offset-2"
+                      ? `scale-105 ring-4 ${card.ringColor} ring-offset-2`
                       : "hover:-translate-y-2 hover:shadow-xl active:scale-95"
                   }`}
                 >
@@ -128,7 +155,7 @@ export function GiftSection() {
                   {/* Gift Box Graphic with animated lid on click */}
                   <div className="relative my-4 flex h-36 w-36 items-center justify-center">
                     {/* Glow aura */}
-                    <div className="absolute inset-0 rounded-full bg-pink-300/40 blur-xl group-hover:bg-pink-400/50 transition duration-300" />
+                    <div className={`absolute inset-0 rounded-full blur-xl transition duration-300 ${card.glowColor}`} />
 
                     {/* Handcrafted Animated Gift SVG */}
                     <svg
@@ -139,12 +166,12 @@ export function GiftSection() {
                     >
                       <defs>
                         <linearGradient id={`boxGrad-${card.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#FFF5F7" />
-                          <stop offset="100%" stopColor="#FED7E2" />
+                          <stop offset="0%" stopColor="#FFFFFF" />
+                          <stop offset="100%" stopColor={card.id === 1 ? "#FED7E2" : card.id === 2 ? "#FED7AA" : "#FECACA"} />
                         </linearGradient>
                         <linearGradient id={`ribbonGrad-${card.id}`} x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop offset="0%" stopColor="#FB7185" />
-                          <stop offset="100%" stopColor="#E11D48" />
+                          <stop offset="0%" stopColor={card.ribbonGradStart} />
+                          <stop offset="100%" stopColor={card.ribbonGradEnd} />
                         </linearGradient>
                       </defs>
 
@@ -156,7 +183,7 @@ export function GiftSection() {
                         height="54"
                         rx="8"
                         fill={`url(#boxGrad-${card.id})`}
-                        stroke="#FDA4AF"
+                        stroke={card.boxStroke}
                         strokeWidth="2.5"
                       />
 
@@ -178,8 +205,8 @@ export function GiftSection() {
                           width="80"
                           height="14"
                           rx="4"
-                          fill="#FFF0F5"
-                          stroke="#FB7185"
+                          fill="#FFFFFF"
+                          stroke={card.boxStroke}
                           strokeWidth="2.5"
                         />
                         {/* Vertical Ribbon on Lid */}
@@ -190,18 +217,18 @@ export function GiftSection() {
                         <path
                           d="M60 42 C50 24, 30 30, 42 42 C48 42, 54 42, 60 42 Z"
                           fill={`url(#ribbonGrad-${card.id})`}
-                          stroke="#BE123C"
+                          stroke={card.ribbonStroke}
                           strokeWidth="1.2"
                         />
                         {/* Right Loop */}
                         <path
                           d="M60 42 C70 24, 90 30, 78 42 C72 42, 66 42, 60 42 Z"
                           fill={`url(#ribbonGrad-${card.id})`}
-                          stroke="#BE123C"
+                          stroke={card.ribbonStroke}
                           strokeWidth="1.2"
                         />
                         {/* Center Knot */}
-                        <circle cx="60" cy="42" r="5" fill="#E11D48" stroke="#9F1239" strokeWidth="1.2" />
+                        <circle cx="60" cy="42" r="5" fill={card.ribbonGradEnd} stroke={card.ribbonStroke} strokeWidth="1.2" />
                       </g>
                     </svg>
                   </div>
