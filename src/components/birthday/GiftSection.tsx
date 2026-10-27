@@ -18,6 +18,27 @@ interface GiftCard {
   ribbonGradEnd: string;
   ribbonStroke: string;
   boxStroke: string;
+  // Bear color theme matching the chosen card
+  bearFurStart: string;
+  bearFurMid: string;
+  bearFurEnd: string;
+  bearFurStroke: string;
+  bearLightStart: string;
+  bearLightMid: string;
+  bearLightEnd: string;
+  bearHeartStart: string;
+  bearHeartMid: string;
+  bearHeartEnd: string;
+  bearHeartStroke: string;
+  bearNose: string;
+  bearCheek: string;
+  themeBadgeBg: string;
+  themeBadgeText: string;
+  themeBadgeHeart: string;
+  themeMessageBg: string;
+  themeMessageBorder: string;
+  themeMessageText: string;
+  themeSubtext: string;
 }
 
 const CARDS: GiftCard[] = [
@@ -33,6 +54,27 @@ const CARDS: GiftCard[] = [
     boxStroke: "#FDA4AF",
     glowColor: "bg-pink-300/40 group-hover:bg-pink-400/50",
     ringColor: "ring-pink-400",
+    // Pink / Rose Bear theme
+    bearFurStart: "#FFA4C4",
+    bearFurMid: "#F472B6",
+    bearFurEnd: "#DB2777",
+    bearFurStroke: "#BE185D",
+    bearLightStart: "#FFF0F5",
+    bearLightMid: "#FCE7F3",
+    bearLightEnd: "#FBCFE8",
+    bearHeartStart: "#FB7185",
+    bearHeartMid: "#E11D48",
+    bearHeartEnd: "#9F1239",
+    bearHeartStroke: "#881337",
+    bearNose: "#831843",
+    bearCheek: "#F43F5E",
+    themeBadgeBg: "bg-pink-100",
+    themeBadgeText: "text-pink-700",
+    themeBadgeHeart: "fill-pink-500 text-pink-500",
+    themeMessageBg: "bg-pink-100/70",
+    themeMessageBorder: "border-pink-200",
+    themeMessageText: "text-pink-900",
+    themeSubtext: "text-pink-700",
   },
   {
     id: 2,
@@ -46,6 +88,27 @@ const CARDS: GiftCard[] = [
     boxStroke: "#FDBA74",
     glowColor: "bg-amber-300/40 group-hover:bg-orange-400/50",
     ringColor: "ring-[#ED8231]",
+    // Orange #ED8231 Bear theme
+    bearFurStart: "#FFBE82",
+    bearFurMid: "#ED8231",
+    bearFurEnd: "#C2570A",
+    bearFurStroke: "#A44505",
+    bearLightStart: "#FFF7ED",
+    bearLightMid: "#FFEDD5",
+    bearLightEnd: "#FED7AA",
+    bearHeartStart: "#FFA25B",
+    bearHeartMid: "#ED8231",
+    bearHeartEnd: "#9A3412",
+    bearHeartStroke: "#7C2D12",
+    bearNose: "#5F2208",
+    bearCheek: "#FB923C",
+    themeBadgeBg: "bg-amber-100",
+    themeBadgeText: "text-amber-800",
+    themeBadgeHeart: "fill-[#ED8231] text-[#ED8231]",
+    themeMessageBg: "bg-amber-100/70",
+    themeMessageBorder: "border-amber-200",
+    themeMessageText: "text-amber-950",
+    themeSubtext: "text-amber-800",
   },
   {
     id: 3,
@@ -59,6 +122,27 @@ const CARDS: GiftCard[] = [
     boxStroke: "#FCA5A5",
     glowColor: "bg-orange-300/40 group-hover:bg-red-400/50",
     ringColor: "ring-[#F54927]",
+    // Red / Coral #F54927 Bear theme
+    bearFurStart: "#FF8E75",
+    bearFurMid: "#F54927",
+    bearFurEnd: "#B91C1C",
+    bearFurStroke: "#991B1B",
+    bearLightStart: "#FFF1F2",
+    bearLightMid: "#FFE4E6",
+    bearLightEnd: "#FECDD3",
+    bearHeartStart: "#FF6E50",
+    bearHeartMid: "#F54927",
+    bearHeartEnd: "#881337",
+    bearHeartStroke: "#701A1A",
+    bearNose: "#4C0519",
+    bearCheek: "#F43F5E",
+    themeBadgeBg: "bg-rose-100",
+    themeBadgeText: "text-rose-800",
+    themeBadgeHeart: "fill-[#F54927] text-[#F54927]",
+    themeMessageBg: "bg-rose-100/70",
+    themeMessageBorder: "border-rose-200",
+    themeMessageText: "text-rose-950",
+    themeSubtext: "text-rose-800",
   },
 ];
 
@@ -250,236 +334,252 @@ export function GiftSection() {
             })}
           </div>
         ) : (
-          /* Revealed Big Pink Teddy Bear Showcase */
-          <div className="glass mx-auto max-w-2xl rounded-3xl border-2 border-pink-300/80 p-6 sm:p-10 shadow-2xl animate-bear-pop-out bg-gradient-to-b from-pink-50/90 via-white to-rose-50/90">
-            {/* Top Badge */}
-            <div className="inline-flex items-center gap-2 rounded-full bg-pink-100 px-4 py-1.5 text-xs font-bold text-pink-700 shadow-sm sm:text-sm">
-              <Heart className="h-4 w-4 fill-pink-500 text-pink-500 animate-pulse" />
-              <span>Surprise Unlocked for {content.couple.herName}! 💖🧸</span>
-            </div>
+          /* Revealed Giant Teddy Bear Showcase styled according to selected card */
+          (() => {
+            const activeCard = CARDS.find((c) => c.id === selectedCardId) ?? CARDS[0]!;
 
-            <h4 className="mt-4 font-display text-3xl font-bold text-primary sm:text-4xl md:text-5xl">
-              A Giant Teddy Bear For You! 🌸🧸
-            </h4>
-            <p className="mx-auto mt-2 max-w-md text-xs text-muted-foreground sm:text-sm">
-              Whenever I am not right beside you, squeeze this fluffy bear and know that I love you more than all the stars in the sky!
-            </p>
-
-            {/* Giant Teddy Bear Graphic - Responsive for mobile */}
-            <div
-              onClick={() => setBearHugging((prev) => !prev)}
-              className="relative mx-auto my-4 sm:my-6 flex h-60 w-60 sm:h-80 sm:w-80 cursor-pointer items-center justify-center select-none transition-transform duration-300 hover:scale-105 active:scale-95"
-              title="Tap me for a hug!"
-            >
-              {/* Floating hearts surrounding bear */}
-              <div className="pointer-events-none absolute -inset-3 sm:-inset-4 animate-pulse opacity-80">
-                <span className="absolute top-2 left-4 sm:left-6 text-xl sm:text-2xl">💖</span>
-                <span className="absolute top-4 sm:top-6 right-2 sm:right-4 text-2xl sm:text-3xl">🌸</span>
-                <span className="absolute bottom-8 sm:bottom-10 left-1 sm:left-2 text-xl sm:text-2xl">✨</span>
-                <span className="absolute bottom-3 sm:bottom-4 right-6 sm:right-8 text-xl sm:text-2xl">💕</span>
-              </div>
-
-              {/* Handcrafted Big Teddy Bear SVG */}
-              <svg viewBox="0 0 200 220" className="h-full w-full drop-shadow-2xl">
-                <defs>
-                  {/* Big Pink Bear Fur Gradient */}
-                  <radialGradient id="pinkFur" cx="40%" cy="35%" r="65%">
-                    <stop offset="0%" stopColor="#FFA4C4" />
-                    <stop offset="50%" stopColor="#F472B6" />
-                    <stop offset="100%" stopColor="#DB2777" />
-                  </radialGradient>
-
-                  {/* Soft Pink Tummy / Snout Gradient */}
-                  <radialGradient id="pinkLight" cx="45%" cy="40%" r="60%">
-                    <stop offset="0%" stopColor="#FFF0F5" />
-                    <stop offset="70%" stopColor="#FCE7F3" />
-                    <stop offset="100%" stopColor="#FBCFE8" />
-                  </radialGradient>
-
-                  {/* Red Heart Gradient */}
-                  <linearGradient id="pinkHeart" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#FB7185" />
-                    <stop offset="50%" stopColor="#E11D48" />
-                    <stop offset="100%" stopColor="#9F1239" />
-                  </linearGradient>
-
-                  {/* Crown Gradient */}
-                  <linearGradient id="pinkCrown" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#FDE047" />
-                    <stop offset="50%" stopColor="#FACC15" />
-                    <stop offset="100%" stopColor="#CA8A04" />
-                  </linearGradient>
-                </defs>
-
-                {/* EARS */}
-                {/* Left Ear */}
-                <g>
-                  <circle cx="56" cy="55" r="26" fill="url(#pinkFur)" stroke="#BE185D" strokeWidth="3" />
-                  <circle cx="56" cy="55" r="15" fill="url(#pinkLight)" opacity="0.95" />
-                </g>
-
-                {/* Right Ear */}
-                <g>
-                  <circle cx="144" cy="55" r="26" fill="url(#pinkFur)" stroke="#BE185D" strokeWidth="3" />
-                  <circle cx="144" cy="55" r="15" fill="url(#pinkLight)" opacity="0.95" />
-                </g>
-
-                {/* BIG CHUBBY LEGS */}
-                {/* Left Leg */}
-                <g>
-                  <ellipse cx="60" cy="186" rx="26" ry="18" fill="url(#pinkFur)" stroke="#BE185D" strokeWidth="3" />
-                  <ellipse cx="60" cy="186" rx="15" ry="10" fill="url(#pinkLight)" opacity="0.9" />
-                  {/* Paw pads */}
-                  <circle cx="50" cy="178" r="3" fill="#BE185D" opacity="0.5" />
-                  <circle cx="60" cy="174" r="3" fill="#BE185D" opacity="0.5" />
-                  <circle cx="70" cy="178" r="3" fill="#BE185D" opacity="0.5" />
-                </g>
-
-                {/* Right Leg */}
-                <g>
-                  <ellipse cx="140" cy="186" rx="26" ry="18" fill="url(#pinkFur)" stroke="#BE185D" strokeWidth="3" />
-                  <ellipse cx="140" cy="186" rx="15" ry="10" fill="url(#pinkLight)" opacity="0.9" />
-                  {/* Paw pads */}
-                  <circle cx="130" cy="178" r="3" fill="#BE185D" opacity="0.5" />
-                  <circle cx="140" cy="174" r="3" fill="#BE185D" opacity="0.5" />
-                  <circle cx="150" cy="178" r="3" fill="#BE185D" opacity="0.5" />
-                </g>
-
-                {/* BIG CHUBBY BODY */}
-                <ellipse cx="100" cy="138" rx="56" ry="50" fill="url(#pinkFur)" stroke="#BE185D" strokeWidth="3" />
-                {/* Fluffy Tummy Patch */}
-                <ellipse cx="100" cy="144" rx="36" ry="30" fill="url(#pinkLight)" opacity="0.95" />
-
-                {/* BIG ADORABLE HEAD */}
-                <circle cx="100" cy="88" r="52" fill="url(#pinkFur)" stroke="#BE185D" strokeWidth="3" />
-
-                {/* Princess Crown for Lel */}
-                <g transform="translate(76, 24) scale(1.3)">
-                  <path
-                    d="M3 18 L7 6 L18 13 L29 6 L33 18 Z"
-                    fill="url(#pinkCrown)"
-                    stroke="#A16207"
-                    strokeWidth="1.6"
-                    strokeLinejoin="round"
-                  />
-                  <circle cx="7" cy="6" r="2.2" fill="#E11D48" />
-                  <circle cx="18" cy="13" r="2.2" fill="#3B82F6" />
-                  <circle cx="29" cy="6" r="2.2" fill="#E11D48" />
-                </g>
-
-                {/* Rosy Pink Cheeks */}
-                <ellipse cx="64" cy="98" rx="9" ry="6" fill="#F43F5E" opacity="0.75" />
-                <ellipse cx="136" cy="98" rx="9" ry="6" fill="#F43F5E" opacity="0.75" />
-
-                {/* Big Cute Snout */}
-                <ellipse cx="100" cy="100" rx="28" ry="20" fill="url(#pinkLight)" stroke="#BE185D" strokeWidth="2" />
-
-                {/* Heart Nose */}
-                <path
-                  d="M92 92 C92 88, 108 88, 108 92 C108 99, 100 104, 100 104 C100 104, 92 99, 92 92 Z"
-                  fill="#831843"
-                />
-
-                {/* Warm Cute Smile */}
-                <path
-                  d="M100 104 L100 109 M90 110 Q100 118 110 110"
-                  stroke="#831843"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  fill="none"
-                />
-
-                {/* Sparkly Big Anime Eyes */}
-                {/* Left Eye */}
-                <g>
-                  <circle cx="75" cy="80" r="7.2" fill="#3B0764" />
-                  <circle cx="72.5" cy="77.5" r="2.8" fill="#FFFFFF" />
-                  <circle cx="77.5" cy="82.5" r="1.3" fill="#FFFFFF" opacity="0.85" />
-                </g>
-
-                {/* Right Eye */}
-                <g>
-                  <circle cx="125" cy="80" r="7.2" fill="#3B0764" />
-                  <circle cx="122.5" cy="77.5" r="2.8" fill="#FFFFFF" />
-                  <circle cx="127.5" cy="82.5" r="1.3" fill="#FFFFFF" opacity="0.85" />
-                </g>
-
-                {/* ARMS HOLDING A BIG GLOWING HEART */}
-                {/* Left Arm */}
-                <ellipse
-                  cx="66"
-                  cy="134"
-                  rx="16"
-                  ry="14"
-                  fill="url(#pinkFur)"
-                  stroke="#BE185D"
-                  strokeWidth="3"
-                  transform={bearHugging ? "rotate(12 66 134)" : ""}
-                />
-                <ellipse cx="66" cy="134" rx="8" ry="7" fill="url(#pinkLight)" opacity="0.8" />
-
-                {/* Right Arm */}
-                <ellipse
-                  cx="134"
-                  cy="134"
-                  rx="16"
-                  ry="14"
-                  fill="url(#pinkFur)"
-                  stroke="#BE185D"
-                  strokeWidth="3"
-                  transform={bearHugging ? "rotate(-12 134 134)" : ""}
-                />
-                <ellipse cx="134" cy="134" rx="8" ry="7" fill="url(#pinkLight)" opacity="0.8" />
-
-                {/* Giant Love Heart in Teddy's Paws */}
-                <g
-                  className="transition-transform duration-300"
-                  style={{
-                    transform: bearHugging ? "scale(1.15)" : "scale(1)",
-                    transformOrigin: "100px 130px",
-                  }}
+            return (
+              <div
+                className={`glass mx-auto max-w-2xl rounded-3xl border-2 p-6 sm:p-10 shadow-2xl animate-bear-pop-out bg-gradient-to-b ${
+                  activeCard.id === 1
+                    ? "border-pink-300/80 from-pink-50/90 via-white to-rose-50/90"
+                    : activeCard.id === 2
+                    ? "border-amber-300/80 from-orange-50/90 via-white to-amber-50/90"
+                    : "border-rose-300/80 from-red-50/90 via-white to-orange-50/90"
+                }`}
+              >
+                {/* Top Badge */}
+                <div
+                  className={`inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-bold shadow-sm sm:text-sm ${activeCard.themeBadgeBg} ${activeCard.themeBadgeText}`}
                 >
-                  <path
-                    d="M100 126 C99 114, 82 106, 76 116 C69 125, 74 138, 100 156 C126 138, 131 125, 124 116 C118 106, 101 114, 100 126 Z"
-                    fill="url(#pinkHeart)"
-                    stroke="#881337"
-                    strokeWidth="2.5"
-                    className="drop-shadow-lg"
-                  />
-                  {/* Heart reflection */}
-                  <path
-                    d="M80 118 Q86 112 92 116"
-                    stroke="#FFF"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    fill="none"
-                    opacity="0.9"
-                  />
-                  <text
-                    x="100"
-                    y="136"
-                    fontSize="10"
-                    fontWeight="bold"
-                    fill="#FFF"
-                    textAnchor="middle"
-                    className="font-script select-none"
-                  >
-                    LEL ♥
-                  </text>
-                </g>
-              </svg>
-            </div>
+                  <Heart className={`h-4 w-4 animate-pulse ${activeCard.themeBadgeHeart}`} />
+                  <span>Surprise Unlocked for {content.couple.herName}! 💖🧸</span>
+                </div>
 
-            {/* Handwritten Message Under Teddy */}
-            <div className="rounded-2xl bg-pink-100/70 p-4 border border-pink-200">
-              <p className="font-handwriting text-2xl sm:text-3xl font-bold text-pink-900 leading-snug">
-                "Here is your giant cuddle buddy, my queen! Made just for you to hug forever and ever."
-              </p>
-              <p className="mt-2 text-xs text-pink-700 font-medium">
-                Tap the bear anytime for an extra warm squeeze! 🐾💕
-              </p>
-            </div>
-          </div>
+                <h4 className="mt-4 font-display text-3xl font-bold text-primary sm:text-4xl md:text-5xl">
+                  A Giant Teddy Bear For You! 🌸🧸
+                </h4>
+                <p className="mx-auto mt-2 max-w-md text-xs text-muted-foreground sm:text-sm">
+                  Whenever I am not right beside you, squeeze this fluffy bear and know that I love you more than all the stars in the sky!
+                </p>
+
+                {/* Giant Teddy Bear Graphic - Responsive for mobile */}
+                <div
+                  onClick={() => setBearHugging((prev) => !prev)}
+                  className="relative mx-auto my-4 sm:my-6 flex h-60 w-60 sm:h-80 sm:w-80 cursor-pointer items-center justify-center select-none transition-transform duration-300 hover:scale-105 active:scale-95"
+                  title="Tap me for a hug!"
+                >
+                  {/* Floating hearts surrounding bear */}
+                  <div className="pointer-events-none absolute -inset-3 sm:-inset-4 animate-pulse opacity-80">
+                    <span className="absolute top-2 left-4 sm:left-6 text-xl sm:text-2xl">💖</span>
+                    <span className="absolute top-4 sm:top-6 right-2 sm:right-4 text-2xl sm:text-3xl">🌸</span>
+                    <span className="absolute bottom-8 sm:bottom-10 left-1 sm:left-2 text-xl sm:text-2xl">✨</span>
+                    <span className="absolute bottom-3 sm:bottom-4 right-6 sm:right-8 text-xl sm:text-2xl">💕</span>
+                  </div>
+
+                  {/* Handcrafted Big Teddy Bear SVG */}
+                  <svg viewBox="0 0 200 220" className="h-full w-full drop-shadow-2xl">
+                    <defs>
+                      {/* Dynamic Bear Fur Gradient matching card */}
+                      <radialGradient id={`activeBearFur-${activeCard.id}`} cx="40%" cy="35%" r="65%">
+                        <stop offset="0%" stopColor={activeCard.bearFurStart} />
+                        <stop offset="50%" stopColor={activeCard.bearFurMid} />
+                        <stop offset="100%" stopColor={activeCard.bearFurEnd} />
+                      </radialGradient>
+
+                      {/* Soft Tummy / Snout Gradient */}
+                      <radialGradient id={`activeBearLight-${activeCard.id}`} cx="45%" cy="40%" r="60%">
+                        <stop offset="0%" stopColor={activeCard.bearLightStart} />
+                        <stop offset="70%" stopColor={activeCard.bearLightMid} />
+                        <stop offset="100%" stopColor={activeCard.bearLightEnd} />
+                      </radialGradient>
+
+                      {/* Heart Gradient */}
+                      <linearGradient id={`activeBearHeart-${activeCard.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor={activeCard.bearHeartStart} />
+                        <stop offset="50%" stopColor={activeCard.bearHeartMid} />
+                        <stop offset="100%" stopColor={activeCard.bearHeartEnd} />
+                      </linearGradient>
+
+                      {/* Crown Gradient */}
+                      <linearGradient id="pinkCrown" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#FDE047" />
+                        <stop offset="50%" stopColor="#FACC15" />
+                        <stop offset="100%" stopColor="#CA8A04" />
+                      </linearGradient>
+                    </defs>
+
+                    {/* EARS */}
+                    {/* Left Ear */}
+                    <g>
+                      <circle cx="56" cy="55" r="26" fill={`url(#activeBearFur-${activeCard.id})`} stroke={activeCard.bearFurStroke} strokeWidth="3" />
+                      <circle cx="56" cy="55" r="15" fill={`url(#activeBearLight-${activeCard.id})`} opacity="0.95" />
+                    </g>
+
+                    {/* Right Ear */}
+                    <g>
+                      <circle cx="144" cy="55" r="26" fill={`url(#activeBearFur-${activeCard.id})`} stroke={activeCard.bearFurStroke} strokeWidth="3" />
+                      <circle cx="144" cy="55" r="15" fill={`url(#activeBearLight-${activeCard.id})`} opacity="0.95" />
+                    </g>
+
+                    {/* BIG CHUBBY LEGS */}
+                    {/* Left Leg */}
+                    <g>
+                      <ellipse cx="60" cy="186" rx="26" ry="18" fill={`url(#activeBearFur-${activeCard.id})`} stroke={activeCard.bearFurStroke} strokeWidth="3" />
+                      <ellipse cx="60" cy="186" rx="15" ry="10" fill={`url(#activeBearLight-${activeCard.id})`} opacity="0.9" />
+                      {/* Paw pads */}
+                      <circle cx="50" cy="178" r="3" fill={activeCard.bearFurStroke} opacity="0.5" />
+                      <circle cx="60" cy="174" r="3" fill={activeCard.bearFurStroke} opacity="0.5" />
+                      <circle cx="70" cy="178" r="3" fill={activeCard.bearFurStroke} opacity="0.5" />
+                    </g>
+
+                    {/* Right Leg */}
+                    <g>
+                      <ellipse cx="140" cy="186" rx="26" ry="18" fill={`url(#activeBearFur-${activeCard.id})`} stroke={activeCard.bearFurStroke} strokeWidth="3" />
+                      <ellipse cx="140" cy="186" rx="15" ry="10" fill={`url(#activeBearLight-${activeCard.id})`} opacity="0.9" />
+                      {/* Paw pads */}
+                      <circle cx="130" cy="178" r="3" fill={activeCard.bearFurStroke} opacity="0.5" />
+                      <circle cx="140" cy="174" r="3" fill={activeCard.bearFurStroke} opacity="0.5" />
+                      <circle cx="150" cy="178" r="3" fill={activeCard.bearFurStroke} opacity="0.5" />
+                    </g>
+
+                    {/* BIG CHUBBY BODY */}
+                    <ellipse cx="100" cy="138" rx="56" ry="50" fill={`url(#activeBearFur-${activeCard.id})`} stroke={activeCard.bearFurStroke} strokeWidth="3" />
+                    {/* Fluffy Tummy Patch */}
+                    <ellipse cx="100" cy="144" rx="36" ry="30" fill={`url(#activeBearLight-${activeCard.id})`} opacity="0.95" />
+
+                    {/* BIG ADORABLE HEAD */}
+                    <circle cx="100" cy="88" r="52" fill={`url(#activeBearFur-${activeCard.id})`} stroke={activeCard.bearFurStroke} strokeWidth="3" />
+
+                    {/* Princess Crown for Lel */}
+                    <g transform="translate(76, 24) scale(1.3)">
+                      <path
+                        d="M3 18 L7 6 L18 13 L29 6 L33 18 Z"
+                        fill="url(#pinkCrown)"
+                        stroke="#A16207"
+                        strokeWidth="1.6"
+                        strokeLinejoin="round"
+                      />
+                      <circle cx="7" cy="6" r="2.2" fill="#E11D48" />
+                      <circle cx="18" cy="13" r="2.2" fill="#3B82F6" />
+                      <circle cx="29" cy="6" r="2.2" fill="#E11D48" />
+                    </g>
+
+                    {/* Rosy Cheeks */}
+                    <ellipse cx="64" cy="98" rx="9" ry="6" fill={activeCard.bearCheek} opacity="0.75" />
+                    <ellipse cx="136" cy="98" rx="9" ry="6" fill={activeCard.bearCheek} opacity="0.75" />
+
+                    {/* Big Cute Snout */}
+                    <ellipse cx="100" cy="100" rx="28" ry="20" fill={`url(#activeBearLight-${activeCard.id})`} stroke={activeCard.bearFurStroke} strokeWidth="2" />
+
+                    {/* Heart Nose */}
+                    <path
+                      d="M92 92 C92 88, 108 88, 108 92 C108 99, 100 104, 100 104 C100 104, 92 99, 92 92 Z"
+                      fill={activeCard.bearNose}
+                    />
+
+                    {/* Warm Cute Smile */}
+                    <path
+                      d="M100 104 L100 109 M90 110 Q100 118 110 110"
+                      stroke={activeCard.bearNose}
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      fill="none"
+                    />
+
+                    {/* Sparkly Big Anime Eyes */}
+                    {/* Left Eye */}
+                    <g>
+                      <circle cx="75" cy="80" r="7.2" fill="#2E1015" />
+                      <circle cx="72.5" cy="77.5" r="2.8" fill="#FFFFFF" />
+                      <circle cx="77.5" cy="82.5" r="1.3" fill="#FFFFFF" opacity="0.85" />
+                    </g>
+
+                    {/* Right Eye */}
+                    <g>
+                      <circle cx="125" cy="80" r="7.2" fill="#2E1015" />
+                      <circle cx="122.5" cy="77.5" r="2.8" fill="#FFFFFF" />
+                      <circle cx="127.5" cy="82.5" r="1.3" fill="#FFFFFF" opacity="0.85" />
+                    </g>
+
+                    {/* ARMS HOLDING A BIG GLOWING HEART */}
+                    {/* Left Arm */}
+                    <ellipse
+                      cx="66"
+                      cy="134"
+                      rx="16"
+                      ry="14"
+                      fill={`url(#activeBearFur-${activeCard.id})`}
+                      stroke={activeCard.bearFurStroke}
+                      strokeWidth="3"
+                      transform={bearHugging ? "rotate(12 66 134)" : ""}
+                    />
+                    <ellipse cx="66" cy="134" rx="8" ry="7" fill={`url(#activeBearLight-${activeCard.id})`} opacity="0.8" />
+
+                    {/* Right Arm */}
+                    <ellipse
+                      cx="134"
+                      cy="134"
+                      rx="16"
+                      ry="14"
+                      fill={`url(#activeBearFur-${activeCard.id})`}
+                      stroke={activeCard.bearFurStroke}
+                      strokeWidth="3"
+                      transform={bearHugging ? "rotate(-12 134 134)" : ""}
+                    />
+                    <ellipse cx="134" cy="134" rx="8" ry="7" fill={`url(#activeBearLight-${activeCard.id})`} opacity="0.8" />
+
+                    {/* Giant Love Heart in Teddy's Paws */}
+                    <g
+                      className="transition-transform duration-300"
+                      style={{
+                        transform: bearHugging ? "scale(1.15)" : "scale(1)",
+                        transformOrigin: "100px 130px",
+                      }}
+                    >
+                      <path
+                        d="M100 126 C99 114, 82 106, 76 116 C69 125, 74 138, 100 156 C126 138, 131 125, 124 116 C118 106, 101 114, 100 126 Z"
+                        fill={`url(#activeBearHeart-${activeCard.id})`}
+                        stroke={activeCard.bearHeartStroke}
+                        strokeWidth="2.5"
+                        className="drop-shadow-lg"
+                      />
+                      {/* Heart reflection */}
+                      <path
+                        d="M80 118 Q86 112 92 116"
+                        stroke="#FFF"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        fill="none"
+                        opacity="0.9"
+                      />
+                      <text
+                        x="100"
+                        y="136"
+                        fontSize="10"
+                        fontWeight="bold"
+                        fill="#FFF"
+                        textAnchor="middle"
+                        className="font-script select-none"
+                      >
+                        LEL ♥
+                      </text>
+                    </g>
+                  </svg>
+                </div>
+
+                {/* Handwritten Message Under Teddy */}
+                <div className={`rounded-2xl p-4 border ${activeCard.themeMessageBg} ${activeCard.themeMessageBorder}`}>
+                  <p className={`font-handwriting text-2xl sm:text-3xl font-bold leading-snug ${activeCard.themeMessageText}`}>
+                    "Here is your giant cuddle buddy, my queen! Made just for you to hug forever and ever."
+                  </p>
+                  <p className={`mt-2 text-xs font-medium ${activeCard.themeSubtext}`}>
+                    Tap the bear anytime for an extra warm squeeze! 🐾💕
+                  </p>
+                </div>
+              </div>
+            );
+          })()
         )}
       </div>
     </div>
